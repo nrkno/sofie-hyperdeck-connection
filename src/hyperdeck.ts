@@ -177,6 +177,9 @@ export class Hyperdeck extends EventEmitter {
 	private _handleAsyncResponse (msg: ResponseMessage) {
 		// TODO - refactor to pick the handler dynamically
 		switch (msg.Code) {
+			case AsynchronousCode.ConnectionInfo:
+				// Only received at startup, and handled by a command
+				break
 			case AsynchronousCode.TransportInfo:
 				const handler = new TransportInfoChange()
 				const r = handler.deserialize(msg)

@@ -44,15 +44,15 @@ export class TransportInfoCommand extends AbstractCommandBase<TransportInfoComma
 }
 
 export interface TransportInfoChangeResponse {
-	Status: TransportStatus | undefined
-	Speed: number | undefined
-	SlotId: SlotId | null | undefined
-	ClipId: number | null | undefined
-	SingleClip: boolean | undefined
-	DisplayTimecode: string | undefined
-	Timecode: string | undefined
-	VideoFormat: VideoFormat | undefined
-	Loop: boolean | undefined
+	Status?: TransportStatus
+	Speed?: number
+	SlotId?: SlotId | null
+	ClipId?: number | null
+	SingleClip?: boolean
+	DisplayTimecode?: string
+	Timecode?: string
+	VideoFormat?: VideoFormat
+	Loop?: boolean
 }
 
 export class TransportInfoChange {
