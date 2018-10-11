@@ -12,19 +12,19 @@ export class DeviceInfoCommand extends AbstractCommandBase<DeviceInfoCommandResp
 	expectedResponseCode = SynchronousCode.DeviceInfo
 
 	deserialize (msg: ResponseMessage) {
-	const res: DeviceInfoCommandResponse = {
-	ProtocolVersion: parseFloat(msg.Params['protocol version']),
-	Model: msg.Params['model'],
-	UniqueId: msg.Params['unique id']
-}
-	return res
-}
+		const res: DeviceInfoCommandResponse = {
+			ProtocolVersion: parseFloat(msg.Params['protocol version']),
+			Model: msg.Params['model'],
+			UniqueId: msg.Params['unique id']
+		}
+		return res
+	}
 	serialize () {
-	const res: NamedMessage = {
-	Name: 'device info',
-	Params: {}
-}
+		const res: NamedMessage = {
+			Name: 'device info',
+			Params: {}
+		}
 
-	return res
-}
+		return res
+	}
 }

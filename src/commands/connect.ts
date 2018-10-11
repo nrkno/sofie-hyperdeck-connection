@@ -12,14 +12,14 @@ export class DummyConnectCommand extends AbstractCommandBase<ConnectionInfoRespo
 	expectedResponseCode = AsynchronousCode.ConnectionInfo
 
 	deserialize (msg: ResponseMessage) {
-	const res: ConnectionInfoResponse = {
-	ProtocolVersion: parseFloat(msg.Params['protocol version']),
-	Model: msg.Params['model']
-}
-	return res
-}
+		const res: ConnectionInfoResponse = {
+			ProtocolVersion: parseFloat(msg.Params['protocol version']),
+			Model: msg.Params['model']
+		}
+		return res
+	}
 	serialize () {
 		// Nothing to send
-	return null
-}
+		return null
+	}
 }
