@@ -2,8 +2,8 @@ import { EventEmitter } from 'events'
 import { Socket } from 'net'
 import * as _ from 'underscore'
 
-import { ResponseCodeType, GetResponseCodeType } from './codes'
-import { AbstractCommand } from './commands'
+import { ResponseCodeType, GetResponseCodeType, AsynchronousCode } from './codes'
+import { AbstractCommand, TransportInfoChange } from './commands'
 import { ResponseMessage, NamedMessage } from './message'
 import { DummyConnectCommand } from './commands/connect'
 
@@ -197,7 +197,14 @@ export class Hyperdeck extends EventEmitter {
             return
         }
 
+        if (this.DEBUG) this._log('res', resMsg)
+
         const codeIsAsync = codeType === ResponseCodeType.Asynchronous
+        if (codeIsAsync) {
+            this._handleAsyncResponse(resMsg)
+            // leave it to fall through in case the queued command is waiting for an async response
+        }
+
         if (this._commandQueue.length > 0 && (!codeIsAsync || this._commandQueue[0].expectedResponseCode === code)) {
             // this belongs to the command, so handle it
             const cmd = this._commandQueue[0]
@@ -205,13 +212,22 @@ export class Hyperdeck extends EventEmitter {
 
             cmd.handle(resMsg)
             this._sendQueuedCommand()
-            return
         }
+    }
 
-
-
-        // TODO
-        this._log('res', resMsg)
-        
+    private _handleAsyncResponse(msg: ResponseMessage) {
+        // TODO - refactor to pick the handler dynamically
+        switch (msg.Code) {
+            case AsynchronousCode.TransportInfo:
+                {
+                    const handler = new TransportInfoChange()
+                    const r = handler.deserialize(msg)
+                    this.emit('transportInfo', r)
+                }
+                break
+            default:
+                this._log('unknown async response:', msg)
+                break
+        }
     }
 }

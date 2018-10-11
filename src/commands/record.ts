@@ -10,7 +10,7 @@ export class RecordCommand extends AbstractCommandBaseNoResponse {
             Params: {}
         }
 
-        if (this.Filename) res.Params.Name = this.Filename
+        if (this.Filename) res.Params.name = this.Filename
 
         return res
     }
