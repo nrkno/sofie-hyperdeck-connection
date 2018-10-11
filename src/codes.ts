@@ -24,6 +24,7 @@ export enum ErrorCode {
 
 export enum SynchronousCode {
 	OK = 200,
+	SlotInfo = 202,
 	DeviceInfo = 204,
 	TransportInfo = 208,
 	Notify = 209
@@ -31,6 +32,7 @@ export enum SynchronousCode {
 
 export enum AsynchronousCode {
 	ConnectionInfo = 500,
+	SlotInfo = 502,
 	TransportInfo = 508
 }
 

@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'
 import { Socket } from 'net'
 
 import { ResponseCodeType, GetResponseCodeType, AsynchronousCode } from './codes'
-import { AbstractCommand, TransportInfoChange } from './commands'
+import { AbstractCommand, TransportInfoChange, SlotInfoChange } from './commands'
 import { ResponseMessage } from './message'
 import { DummyConnectCommand } from './commands/connect'
 import { parseResponse, buildMessageStr } from './parser'
@@ -181,10 +181,19 @@ export class Hyperdeck extends EventEmitter {
 				// Only received at startup, and handled by a command
 				break
 			case AsynchronousCode.TransportInfo:
-				const handler = new TransportInfoChange()
-				const r = handler.deserialize(msg)
-				this.emit('transportInfo', r)
-				break
+				{
+					const handler = new TransportInfoChange()
+					const r = handler.deserialize(msg)
+					this.emit('transportInfo', r)
+					break
+				}
+			case AsynchronousCode.SlotInfo:
+				{
+					const handler = new SlotInfoChange()
+					const r = handler.deserialize(msg)
+					this.emit('slotInfo', r)
+					break
+				}
 			default:
 				this._log('unknown async response:', msg)
 				break

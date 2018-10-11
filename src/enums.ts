@@ -14,6 +14,13 @@ export enum SlotId {
 	SlotTwo = 2
 }
 
+export enum SlotStatus {
+	Empty = 'empty',
+	Mounting = 'mounting',
+	Error = 'error',
+	Mounted = 'mounted'
+}
+
 export enum VideoFormat {
 	NTSC = 'NTSC',
 	PAL = 'PAL',
