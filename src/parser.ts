@@ -4,7 +4,7 @@ import { ResponseMessage, NamedMessage } from './message'
 export function parseResponse (lines: string[]): ResponseMessage | null {
 	if (lines.length === 0) return null
 
-	lines = lines.map(l => l.trim()) // TODO - ensure this is safe with dodgey clip names
+	lines = lines.map(l => l.trim())
 
 	const headerMatch = lines[0].match(/^(\d+) (.+?)(:|)$/im)
 	if (!headerMatch) {

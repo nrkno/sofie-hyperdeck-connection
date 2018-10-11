@@ -8,10 +8,8 @@ import { DummyConnectCommand, WatchdogPeriodCommand, PingCommand } from './comma
 import { parseResponse, buildMessageStr } from './parser'
 
 export interface HyperdeckOptions {
-	// address?: string,
-	// port?: number,
 	pingPeriod?: number // set to 0 to disable
-	debug?: boolean,
+	debug?: boolean
 	externalLog?: (arg0?: any, arg1?: any, arg2?: any, arg3?: any) => void
 }
 
@@ -63,7 +61,7 @@ export class Hyperdeck extends EventEmitter {
 			}
 
 			if (this._pingPeriod > 0) {
-				const cmd = new WatchdogPeriodCommand(1 + Math.round(this._pingPeriod / 1000)) // TODO - set this slightly higher?
+				const cmd = new WatchdogPeriodCommand(1 + Math.round(this._pingPeriod / 1000))
 				this.sendCommand(cmd)
 				cmd.then(() => {
 					if (this.DEBUG) this._log('ping: setting up')
@@ -78,7 +76,6 @@ export class Hyperdeck extends EventEmitter {
 			this._log('connection failed', e)
 		})
 		this._commandQueue = [connCommand]
-		// this._commandQueue.unshift(connCommand)
 
 		return this.socket.connect(port || this.DEFAULT_PORT, address)
 	}
@@ -92,6 +89,7 @@ export class Hyperdeck extends EventEmitter {
 	}
 
 	sendCommand (command: AbstractCommand) {
+		
 		// TODO - abort if not connected
 		
 		this._commandQueue.push(command)
@@ -123,7 +121,7 @@ export class Hyperdeck extends EventEmitter {
 		const cmd = this._commandQueue[0]
 		const sent = this._sendCommand(cmd)
 
-		// Command failed to send, so try next
+		// Command failed to send, so move on to the next
 		if (!sent) {
 			this._commandQueue.shift()
 			this._sendQueuedCommand()
@@ -141,7 +139,6 @@ export class Hyperdeck extends EventEmitter {
 			this.socket.write(cmdString)
 			this._lastCommandTime = Date.now()
 
-			command.markSent()
 			return true
 
 		} catch (e) {
@@ -163,7 +160,7 @@ export class Hyperdeck extends EventEmitter {
 				continue
 			}
 
-			// if the first line has no colon, then it is a single line
+			// if the first line has no colon, then it is a single line command
 			if (this._receivedLinesQueue[0].indexOf(':') === -1) {
 				this._parseResponse(this._receivedLinesQueue.splice(0, 1))
 				continue
@@ -200,7 +197,6 @@ export class Hyperdeck extends EventEmitter {
 		}
 
 		if (this._commandQueue.length > 0 && (!codeIsAsync || this._commandQueue[0].expectedResponseCode === resMsg.Code)) {
-			// this belongs to the command, so handle it
 			const cmd = this._commandQueue[0]
 			this._commandQueue.shift()
 
