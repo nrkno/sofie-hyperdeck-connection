@@ -1,6 +1,6 @@
 import { SynchronousCode } from '../codes'
 import { ResponseMessage, NamedMessage } from '../message'
-import { AbstractCommandBase } from './abstractCommand'
+import { AbstractCommandBase, AbstractCommandBaseNoResponse } from './abstractCommand'
 import { SetBoolIfDefined } from './util'
 
 export interface NotifyCommandResponse {
@@ -8,22 +8,21 @@ export interface NotifyCommandResponse {
     Transport: boolean
     Slot: boolean
     Configuration: boolean
+    DroppedFrames: boolean
 }
 
 export class NotifyGetCommand extends AbstractCommandBase<NotifyCommandResponse> {
     expectedResponseCode = SynchronousCode.Notify
 
     deserialize (msg: ResponseMessage) {
-        if (msg.Code === this.expectedResponseCode) {
-            this.resolve({
-                Remote: msg.Params['remote'] === 'true',
-                Transport: msg.Params['transport'] === 'true',
-                Slot: msg.Params['slot'] === 'true',
-                Configuration: msg.Params['configuration'] === 'true',
-            })
-        } else { 
-            this.reject(msg)
+        const res: NotifyCommandResponse = {
+            Remote: msg.Params['remote'] === 'true',
+            Transport: msg.Params['transport'] === 'true',
+            Slot: msg.Params['slot'] === 'true',
+            Configuration: msg.Params['configuration'] === 'true',
+            DroppedFrames: msg.Params['dropped frames'] === 'true',
         }
+        return res
     }
     serialize () {
         const res: NamedMessage = {
@@ -35,21 +34,13 @@ export class NotifyGetCommand extends AbstractCommandBase<NotifyCommandResponse>
     }
 }
 
-export class NotifySetCommand extends AbstractCommandBase<boolean> {
-    expectedResponseCode = SynchronousCode.OK
-
+export class NotifySetCommand extends AbstractCommandBaseNoResponse {
     Remote: boolean | undefined
     Transport: boolean | undefined
     Slot: boolean | undefined
     Configuration: boolean | undefined
+    DroppedFrames: boolean | undefined
 
-    deserialize (msg: ResponseMessage) {
-        if (msg.Code === this.expectedResponseCode) {
-            this.resolve(true)
-        } else { 
-            this.reject(msg)
-        }
-    }
     serialize () {
         const res: NamedMessage = {
             Name: 'notify',
@@ -60,6 +51,7 @@ export class NotifySetCommand extends AbstractCommandBase<boolean> {
         SetBoolIfDefined(res, 'transport', this.Transport)
         SetBoolIfDefined(res, 'slot', this.Slot)
         SetBoolIfDefined(res, 'configuration', this.Configuration)
+        SetBoolIfDefined(res, 'dropped frames', this.DroppedFrames)
 
         return res
     }

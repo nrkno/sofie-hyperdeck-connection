@@ -1,22 +1,35 @@
-import { ResponseCode } from '../codes'
+import { ResponseCode, SynchronousCode } from '../codes'
 import { ResponseMessage, NamedMessage } from '../message'
 
 export interface ErrorResponse extends ResponseMessage {
 }
 
-export interface AbstractCommand {
-    expectedResponseCode: ResponseCode | null
+// export interface IResponse {
+// }
 
-    deserialize(msg: ResponseMessage)
+export interface AbstractCommand {
+    expectedResponseCode: ResponseCode
+
+    handle(msg: ResponseMessage)
+
+    //deserialize(msg: ResponseMessage): IResponse
     serialize(): NamedMessage | null
 
     markSent()
 }
 
 export abstract class AbstractCommandBase<T> implements Promise<T>, AbstractCommand {
-    abstract expectedResponseCode: ResponseCode | null
+    abstract expectedResponseCode: ResponseCode
 
-    abstract deserialize(msg: ResponseMessage)
+    handle(msg: ResponseMessage) {
+        if (msg.Code === this.expectedResponseCode) {
+            this.resolve(this.deserialize(msg))
+        } else {
+            this.reject(msg)
+        }
+    }
+
+    abstract deserialize(msg: ResponseMessage): T
     abstract serialize(): NamedMessage | null
 
     private _promise: Promise<T>
@@ -46,16 +59,17 @@ export abstract class AbstractCommandBase<T> implements Promise<T>, AbstractComm
     }
 }
 
-// export abstract class AbstractCommandBaseNoResponse extends AbstractCommandBase<boolean>{ // TODO - is this type actually needed??
-//     expectedResponseCode = null
+export abstract class AbstractCommandBaseNoResponse extends AbstractCommandBase<boolean>{
+    expectedResponseCode = SynchronousCode.OK
 
-//     markSent() {
-//         super.markSent()
-//         // No response will be received, so resolve the promise now
-//         this.resolve(true)
-//     }
+    // markSent() {
+    //     super.markSent()
+    //     // No response will be received, so resolve the promise now
+    //     this.resolve(true)
+    // }
 
-//     deserialize(msg: ResponseMessage){
-//         msg.Name
-//     }
-// }
+    deserialize(msg: ResponseMessage) {
+        msg.Code
+        return true
+    }
+}

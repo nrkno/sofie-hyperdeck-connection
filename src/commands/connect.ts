@@ -12,14 +12,11 @@ export class DummyConnectCommand extends AbstractCommandBase<ConnectionInfoRespo
     expectedResponseCode = AsynchronousCode.ConnectionInfo
 
     deserialize (msg: ResponseMessage) {
-        if (msg.Code === this.expectedResponseCode) {
-            this.resolve({
-                ProtocolVersion: parseFloat(msg.Params['protocol version']),
-                Model: msg.Params['model'],
-            })
-        } else { 
-            this.reject(msg)
+        const res: ConnectionInfoResponse = {
+            ProtocolVersion: parseFloat(msg.Params['protocol version']),
+            Model: msg.Params['model'],
         }
+        return res
     }
     serialize () {
         // Nothing to send

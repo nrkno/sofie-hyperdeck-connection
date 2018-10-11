@@ -203,7 +203,7 @@ export class Hyperdeck extends EventEmitter {
             const cmd = this._commandQueue[0]
             this._commandQueue.pop()
 
-            cmd.deserialize(resMsg) // TODO - deserialize probably shouldnt have side effects (resolving the promise...)
+            cmd.handle(resMsg)
             this._sendQueuedCommand()
             return
         }
