@@ -23,7 +23,7 @@ export class DummyConnectCommand extends AbstractCommandBase<ConnectionInfoRespo
 export class WatchdogPeriodCommand extends AbstractCommandBaseNoResponse {
 	readonly Period: number
 
-	constructor(period: number){
+	constructor (period: number) {
 		super()
 		this.Period = period
 	}

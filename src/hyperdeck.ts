@@ -56,22 +56,23 @@ export class Hyperdeck extends EventEmitter {
 
 		const connCommand = new DummyConnectCommand()
 		connCommand.then(c => {
-			if (c.ProtocolVersion !== 1.6) {
+			if (c.ProtocolVersion !== 1.5) {
 				throw new Error('unknown protocol version: ' + c.ProtocolVersion)
 			}
 
 			if (this._pingPeriod > 0) {
 				const cmd = new WatchdogPeriodCommand(1 + Math.round(this._pingPeriod / 1000))
 				this.sendCommand(cmd)
-				cmd.then(() => {
+				return cmd.then(() => {
 					if (this.DEBUG) this._log('ping: setting up')
 					this._pingInterval = setInterval(() => this._performPing(), this._pingPeriod)
-				})
+				}).then(() => c)
 			}
 
+			return c
+		}).then((c) => {
 			this.emit('connected', c)
-			
-		}, e => {
+		}).catch(e => {
 			// TODO - clean up connection etc
 			this._log('connection failed', e)
 		})
@@ -89,12 +90,12 @@ export class Hyperdeck extends EventEmitter {
 	}
 
 	sendCommand (command: AbstractCommand) {
-		
-		// TODO - abort if not connected
-		
+
+		// TODO - abort if not connected, but make sure watchdog still gets sent
+
 		this._commandQueue.push(command)
 		if (this.DEBUG) this._log('queued:', this._commandQueue.length)
-		
+
 		if (this._commandQueue.length === 1) {
 			this._sendQueuedCommand()
 		}
@@ -215,14 +216,14 @@ export class Hyperdeck extends EventEmitter {
 				{
 					const handler = new TransportInfoChange()
 					const r = handler.deserialize(msg)
-					this.emit('transportInfo', r)
+					this.emit('notify.transport', r)
 					break
 				}
 			case AsynchronousCode.SlotInfo:
 				{
 					const handler = new SlotInfoChange()
 					const r = handler.deserialize(msg)
-					this.emit('slotInfo', r)
+					this.emit('notify.slot', r)
 					break
 				}
 			default:

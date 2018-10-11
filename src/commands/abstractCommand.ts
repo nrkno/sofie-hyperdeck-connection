@@ -17,8 +17,8 @@ export abstract class AbstractCommandBase<T> implements Promise<T>, AbstractComm
 
 	[Symbol.toStringTag] // TODO what is this??
 
-	private resolve: (res: T) => void
-	private reject: (res: ErrorResponse) => void
+	protected resolve: (res: T) => void
+	protected reject: (res: ErrorResponse) => void
 	private _promise: Promise<T>
 
 	constructor () {
@@ -48,11 +48,10 @@ export abstract class AbstractCommandBase<T> implements Promise<T>, AbstractComm
 	}
 }
 
-export abstract class AbstractCommandBaseNoResponse extends AbstractCommandBase<boolean> {
+export abstract class AbstractCommandBaseNoResponse extends AbstractCommandBase<void> {
 	expectedResponseCode = SynchronousCode.OK
 
-	deserialize (msg: ResponseMessage) {
+	deserialize (msg: ResponseMessage): void {
 		msg.Code.toString()
-		return true
 	}
 }
