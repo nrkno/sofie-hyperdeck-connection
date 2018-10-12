@@ -37,16 +37,16 @@ export enum AsynchronousCode {
 }
 
 export enum ResponseCodeType {
-	Unknown,
-	Error,
-	Synchronous,
-	Asynchronous
+	UNKNOWN,
+	ERROR,
+	SYNCHRONOUS,
+	ASYNCHRONOUS
 }
 
 export function GetResponseCodeType (val: ResponseCode): ResponseCodeType {
-	if (val >= 100 && val <= 199) return ResponseCodeType.Error
-	if (val >= 200 && val <= 299) return ResponseCodeType.Synchronous
-	if (val >= 500 && val <= 599) return ResponseCodeType.Asynchronous
+	if (val >= 100 && val <= 199) return ResponseCodeType.ERROR
+	if (val >= 200 && val <= 299) return ResponseCodeType.SYNCHRONOUS
+	if (val >= 500 && val <= 599) return ResponseCodeType.ASYNCHRONOUS
 
-	return ResponseCodeType.Unknown
+	return ResponseCodeType.UNKNOWN
 }

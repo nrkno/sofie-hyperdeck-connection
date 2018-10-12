@@ -1,24 +1,24 @@
 export enum TransportStatus {
-	Preview = 'preview',
-	Stopped = 'stopped',
-	Play = 'play',
-	Forward = 'forward',
-	Rewind = 'rewind',
-	Jog = 'jog',
-	Shuttle = 'shuttle',
-	Record = 'record'
+	PREVIEW = 'preview',
+	STOPPED = 'stopped',
+	PLAY = 'play',
+	FORWARD = 'forward',
+	REWIND = 'rewind',
+	JOG = 'jog',
+	SHUTTLE = 'shuttle',
+	RECORD = 'record'
 }
 
 export enum SlotId {
-	SlotOne = 1,
-	SlotTwo = 2
+	ONE = 1,
+	TWO = 2
 }
 
 export enum SlotStatus {
-	Empty = 'empty',
-	Mounting = 'mounting',
-	Error = 'error',
-	Mounted = 'mounted'
+	EMPTY = 'empty',
+	MOUNTING = 'mounting',
+	ERROR = 'error',
+	MOUNTED = 'mounted'
 }
 
 export enum VideoFormat {

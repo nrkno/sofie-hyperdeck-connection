@@ -167,14 +167,14 @@ export class Hyperdeck extends EventEmitter {
 		const msgs = this._parser.receivedString(data)
 		msgs.forEach(resMsg => {
 			const codeType = GetResponseCodeType(resMsg.code)
-			if (codeType === ResponseCodeType.Unknown) {
+			if (codeType === ResponseCodeType.UNKNOWN) {
 				this._log('unknown response:', resMsg)
 				return
 			}
 
 			this._logDebug('res', resMsg)
 
-			const codeIsAsync = codeType === ResponseCodeType.Asynchronous
+			const codeIsAsync = codeType === ResponseCodeType.ASYNCHRONOUS
 			if (codeIsAsync) {
 				this._handleAsyncResponse(resMsg)
 				// leave it to fall through in case the queued command is waiting for an async response
