@@ -2,7 +2,8 @@ import { EventEmitter } from 'events'
 import { Socket } from 'net'
 
 import { ResponseCodeType, GetResponseCodeType, AsynchronousCode } from './codes'
-import { AbstractCommand, TransportInfoChange, SlotInfoChange } from './commands'
+import { AbstractCommand } from './commands'
+import * as AsyncHandlers from './asyncHandlers'
 import { ResponseMessage } from './message'
 import { DummyConnectCommand, WatchdogPeriodCommand, PingCommand } from './commands/internal'
 import { parseResponse, buildMessageStr } from './parser'
@@ -26,6 +27,7 @@ export class Hyperdeck extends EventEmitter {
 	private _pingPeriod: number = 5000
 	private _pingInterval: NodeJS.Timer | null = null
 	private _lastCommandTime: number = 0
+	private _asyncHandlers: {[key: number]: AsyncHandlers.IHandler} = {}
 
 	constructor (options?: HyperdeckOptions) {
 		super()
@@ -49,6 +51,15 @@ export class Hyperdeck extends EventEmitter {
 			this.emit('disconnected')
 		}) // TODO - should this be on close?
 		this.socket.on('data', (d) => this._handleData((d as any) as string)) // TODO - fix this casting mess
+
+		for (const h in AsyncHandlers) {
+			try {
+				const handler: AsyncHandlers.IHandler = new (AsyncHandlers as any)[h]()
+				this._asyncHandlers[handler.responseCode] = handler
+			} catch (e) {
+				// ignore as likely not a class
+			}
+		}
 	}
 
 	connect (address: string, port?: number) {
@@ -56,7 +67,7 @@ export class Hyperdeck extends EventEmitter {
 
 		const connCommand = new DummyConnectCommand()
 		connCommand.then(c => {
-			if (c.ProtocolVersion !== 1.5) {
+			if (c.ProtocolVersion !== 1.6) {
 				throw new Error('unknown protocol version: ' + c.ProtocolVersion)
 			}
 
@@ -207,28 +218,17 @@ export class Hyperdeck extends EventEmitter {
 	}
 
 	private _handleAsyncResponse (msg: ResponseMessage) {
-		// TODO - refactor to pick the handler dynamically
 		switch (msg.Code) {
 			case AsynchronousCode.ConnectionInfo:
 				// Only received at startup, and handled by a command
-				break
-			case AsynchronousCode.TransportInfo:
-				{
-					const handler = new TransportInfoChange()
-					const r = handler.deserialize(msg)
-					this.emit('notify.transport', r)
-					break
-				}
-			case AsynchronousCode.SlotInfo:
-				{
-					const handler = new SlotInfoChange()
-					const r = handler.deserialize(msg)
-					this.emit('notify.slot', r)
-					break
-				}
-			default:
-				this._log('unknown async response:', msg)
-				break
+				return
+		}
+
+		const h = this._asyncHandlers[msg.Code]
+		if (h) {
+			this.emit(h.eventName, h.deserialize(msg))
+		} else {
+			this._log('unknown async response:', msg)
 		}
 	}
 }

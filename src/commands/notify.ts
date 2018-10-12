@@ -1,7 +1,7 @@
 import { SynchronousCode } from '../codes'
 import { ResponseMessage, NamedMessage } from '../message'
 import { AbstractCommandBase, AbstractCommandBaseNoResponse } from './abstractCommand'
-import { SetBoolIfDefined } from './util'
+import { SetBoolIfDefined } from '../util'
 
 export interface NotifyCommandResponse {
 	Remote: boolean
