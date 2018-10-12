@@ -77,7 +77,7 @@ export class Hyperdeck extends EventEmitter {
 				const cmd = new WatchdogPeriodCommand(1 + Math.round(this._pingPeriod / 1000))
 				this.sendCommand(cmd)
 				return cmd.then(() => {
-					if (this.DEBUG) this._log('ping: setting up')
+					this._logDebug('ping: setting up')
 					this._pingInterval = setInterval(() => this._performPing(), this._pingPeriod)
 				}).then(() => c)
 			}
@@ -91,7 +91,7 @@ export class Hyperdeck extends EventEmitter {
 		})
 		this._commandQueue = [connCommand]
 
-		return this.socket.connect(port || this.DEFAULT_PORT, address)
+		this.socket.connect(port || this.DEFAULT_PORT, address)
 	}
 
 	disconnect (): Promise<void> {
@@ -102,12 +102,13 @@ export class Hyperdeck extends EventEmitter {
 		// })
 	}
 
-	sendCommand (command: AbstractCommand) {
+	sendCommand (...commands: AbstractCommand[]) {
 
 		// TODO - abort if not connected, but make sure watchdog still gets sent
-
-		this._commandQueue.push(command)
-		if (this.DEBUG) this._log('queued:', this._commandQueue.length)
+		commands.forEach(command => {
+			this._commandQueue.push(command)
+			this._logDebug('queued:', this._commandQueue.length)
+		})
 
 		if (this._commandQueue.length === 1) {
 			this._sendQueuedCommand()
@@ -121,15 +122,15 @@ export class Hyperdeck extends EventEmitter {
 			// TODO - timed out
 		} else if (this._commandQueue.length > 0) {
 			// There are commands queued, which will reset the ping timers once executed
-			if (this.DEBUG) this._log('ping: queue has commands')
+			this._logDebug('ping: queue has commands')
 		} else {
-			if (this.DEBUG) this._log('ping: queueing')
+			this._logDebug('ping: queueing')
 			this.sendCommand(new PingCommand())
 		}
 	}
 
 	private _sendQueuedCommand () {
-		if (this.DEBUG) this._log('try send:', this._commandQueue.length)
+		this._logDebug('try send:', this._commandQueue.length)
 
 		if (this._commandQueue.length === 0) return
 		const cmd = this._commandQueue[0]
@@ -147,7 +148,7 @@ export class Hyperdeck extends EventEmitter {
 		if (msg === null) return false
 
 		const cmdString = buildMessageStr(msg)
-		if (this.DEBUG) this._log('sending str:', cmdString)
+		this._logDebug('sending str:', cmdString)
 
 		try {
 			this.socket.write(cmdString)
@@ -167,23 +168,22 @@ export class Hyperdeck extends EventEmitter {
 		msgs.forEach(resMsg => {
 			const codeType = GetResponseCodeType(resMsg.Code)
 			if (codeType === ResponseCodeType.Unknown) {
-				// TODO properly
-				console.log('really unknown response code...')
+				this._log('unknown response:', resMsg)
 				return
 			}
-	
-			if (this.DEBUG) this._log('res', resMsg)
-	
+
+			this._logDebug('res', resMsg)
+
 			const codeIsAsync = codeType === ResponseCodeType.Asynchronous
 			if (codeIsAsync) {
 				this._handleAsyncResponse(resMsg)
 				// leave it to fall through in case the queued command is waiting for an async response
 			}
-	
+
 			if (this._commandQueue.length > 0 && (!codeIsAsync || this._commandQueue[0].expectedResponseCode === resMsg.Code)) {
 				const cmd = this._commandQueue[0]
 				this._commandQueue.shift()
-	
+
 				cmd.handle(resMsg)
 				this._sendQueuedCommand()
 			}
@@ -203,5 +203,9 @@ export class Hyperdeck extends EventEmitter {
 		} else {
 			this._log('unknown async response:', msg)
 		}
+	}
+
+	private _logDebug(...args: any[]) {
+		if (this.DEBUG) this._log(...args)
 	}
 }

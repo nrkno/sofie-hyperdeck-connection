@@ -4,7 +4,7 @@ import { ResponseMessage, NamedMessage } from '../message'
 export interface ErrorResponse extends ResponseMessage {
 }
 
-export interface AbstractCommand {
+export interface AbstractCommand extends Promise<any> {
 	expectedResponseCode: ResponseCode
 
 	handle (msg: ResponseMessage)
