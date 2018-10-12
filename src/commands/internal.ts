@@ -9,8 +9,8 @@ export class DummyConnectCommand extends AbstractCommandBase<ConnectionInfoRespo
 
 	deserialize (msg: ResponseMessage) {
 		const res: ConnectionInfoResponse = {
-			ProtocolVersion: parseFloat(msg.Params['protocol version']),
-			Model: msg.Params['model']
+			protocolVersion: parseFloat(msg.params['protocol version']),
+			model: msg.params['model']
 		}
 		return res
 	}
@@ -30,8 +30,8 @@ export class WatchdogPeriodCommand extends AbstractCommandBaseNoResponse {
 
 	serialize () {
 		const res: NamedMessage = {
-			Name: 'watchdog',
-			Params: {
+			name: 'watchdog',
+			params: {
 				period: this.Period + ''
 			}
 		}
@@ -43,8 +43,8 @@ export class WatchdogPeriodCommand extends AbstractCommandBaseNoResponse {
 export class PingCommand extends AbstractCommandBaseNoResponse {
 	serialize () {
 		const res: NamedMessage = {
-			Name: 'ping',
-			Params: {}
+			name: 'ping',
+			params: {}
 		}
 
 		return res

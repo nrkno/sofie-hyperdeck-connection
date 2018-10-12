@@ -5,8 +5,8 @@ describe('Parser', () => {
 
 	test('Parser: response single line', async () => {
 		const msg: NamedMessage = {
-			Name: 'some phrase',
-			Params: {}
+			name: 'some phrase',
+			params: {}
 		}
 
 		const str = buildMessageStr(msg)
@@ -15,8 +15,8 @@ describe('Parser', () => {
 
 	test('Parser: response multiline', async () => {
 		const msg: NamedMessage = {
-			Name: 'some phrase',
-			Params: {
+			name: 'some phrase',
+			params: {
 				'item one': 'val 1'
 			}
 		}
@@ -28,21 +28,21 @@ describe('Parser', () => {
 	test('Parser: Single line', async () => {
 		const rawLines = ['200 ok']
 
-		const parser = new MultilineParser(false, () => {})
+		const parser = new MultilineParser(false, () => null)
 		const res = parser.parseResponse(rawLines)
 		expect(res).toBeTruthy()
 
 		if (res) {
-			expect(res.Code).toEqual(200)
-			expect(res.Name).toEqual('ok')
-			expect(res.Params).toEqual({})
+			expect(res.code).toEqual(200)
+			expect(res.name).toEqual('ok')
+			expect(res.params).toEqual({})
 		}
 	})
 
 	test('Parser: Broken line', async () => {
 		const rawLines = ['200ok']
 
-		const parser = new MultilineParser(false, () => {})
+		const parser = new MultilineParser(false, () => null)
 		const res = parser.parseResponse(rawLines)
 		expect(res).toBeFalsy()
 	})
@@ -56,14 +56,14 @@ describe('Parser', () => {
 			'broken line to be ignored'
 		]
 
-		const parser = new MultilineParser(false, () => {})
+		const parser = new MultilineParser(false, () => null)
 		const res = parser.parseResponse(rawLines)
 		expect(res).toBeTruthy()
 
 		if (res) {
-			expect(res.Code).toEqual(200)
-			expect(res.Name).toEqual('spaced name')
-			expect(res.Params).toEqual({
+			expect(res.code).toEqual(200)
+			expect(res.name).toEqual('spaced name')
+			expect(res.params).toEqual({
 				prop1: 'val',
 				item2: 'val2',
 				'spaced key': 'spaced out val'
@@ -72,7 +72,7 @@ describe('Parser', () => {
 	})
 
 	test('Parser: Slow stream', async () => {
-		const parser = new MultilineParser(false, () => {})
+		const parser = new MultilineParser(false, () => null)
 		expect(parser.receivedString('200 ok:\r\n')).toHaveLength(0)
 		expect(parser.receivedString('key: val\r\n')).toHaveLength(0)
 		expect(parser.receivedString('key2: val2\r\n')).toHaveLength(0)
@@ -80,12 +80,12 @@ describe('Parser', () => {
 	})
 
 	test('Parser: Multiple at once', async () => {
-		const parser = new MultilineParser(false, () => {})
+		const parser = new MultilineParser(false, () => null)
 		expect(parser.receivedString('200 ok\r\n200 ok\r\n200 ok\r\n')).toHaveLength(3)
 	})
 
 	test('Parser: Invalid ignored', async () => {
-		const parser = new MultilineParser(false, () => {})
+		const parser = new MultilineParser(false, () => null)
 		expect(parser.receivedString('\r\n200 ok\r\n200ok\r\n200 ok\r\n')).toHaveLength(2)
 	})
 

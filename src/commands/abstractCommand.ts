@@ -40,7 +40,7 @@ export abstract class AbstractCommandBase<T> implements Promise<T>, AbstractComm
 	}
 
 	handle (msg: ResponseMessage) {
-		if (msg.Code === this.expectedResponseCode) {
+		if (msg.code === this.expectedResponseCode) {
 			this.resolve(this.deserialize(msg))
 		} else {
 			this.reject(msg)
@@ -52,6 +52,6 @@ export abstract class AbstractCommandBaseNoResponse extends AbstractCommandBase<
 	expectedResponseCode = SynchronousCode.OK
 
 	deserialize (msg: ResponseMessage): void {
-		msg.Code.toString()
+		msg = msg
 	}
 }

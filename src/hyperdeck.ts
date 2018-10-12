@@ -69,8 +69,8 @@ export class Hyperdeck extends EventEmitter {
 
 		const connCommand = new DummyConnectCommand()
 		connCommand.then(c => {
-			if (c.ProtocolVersion !== 1.6) {
-				throw new Error('unknown protocol version: ' + c.ProtocolVersion)
+			if (c.protocolVersion !== 1.6) {
+				throw new Error('unknown protocol version: ' + c.protocolVersion)
 			}
 
 			if (this._pingPeriod > 0) {
@@ -166,7 +166,7 @@ export class Hyperdeck extends EventEmitter {
 	private _handleData (data: string) {
 		const msgs = this._parser.receivedString(data)
 		msgs.forEach(resMsg => {
-			const codeType = GetResponseCodeType(resMsg.Code)
+			const codeType = GetResponseCodeType(resMsg.code)
 			if (codeType === ResponseCodeType.Unknown) {
 				this._log('unknown response:', resMsg)
 				return
@@ -180,7 +180,7 @@ export class Hyperdeck extends EventEmitter {
 				// leave it to fall through in case the queued command is waiting for an async response
 			}
 
-			if (this._commandQueue.length > 0 && (!codeIsAsync || this._commandQueue[0].expectedResponseCode === resMsg.Code)) {
+			if (this._commandQueue.length > 0 && (!codeIsAsync || this._commandQueue[0].expectedResponseCode === resMsg.code)) {
 				const cmd = this._commandQueue[0]
 				this._commandQueue.shift()
 
@@ -191,13 +191,13 @@ export class Hyperdeck extends EventEmitter {
 	}
 
 	private _handleAsyncResponse (msg: ResponseMessage) {
-		switch (msg.Code) {
+		switch (msg.code) {
 			case AsynchronousCode.ConnectionInfo:
 				// Only received at startup, and handled by a command
 				return
 		}
 
-		const h = this._asyncHandlers[msg.Code]
+		const h = this._asyncHandlers[msg.code]
 		if (h) {
 			this.emit(h.eventName, h.deserialize(msg))
 		} else {
@@ -205,7 +205,7 @@ export class Hyperdeck extends EventEmitter {
 		}
 	}
 
-	private _logDebug(...args: any[]) {
+	private _logDebug (...args: any[]) {
 		if (this.DEBUG) this._log(...args)
 	}
 }

@@ -4,11 +4,11 @@ import { ResponseMessage, NamedMessage } from '../message'
 import { AbstractCommandBase } from './abstractCommand'
 
 export interface SlotInfoCommandResponse {
-	SlotId: SlotId
-	Status: SlotStatus
-	VolumeName: string
-	RecordingTime: number
-	VideoFormat: VideoFormat
+	slotId: SlotId
+	status: SlotStatus
+	volumeName: string
+	recordingTime: number
+	videoFormat: VideoFormat
 }
 
 export class SlotInfoCommand extends AbstractCommandBase<SlotInfoCommandResponse> {
@@ -16,18 +16,18 @@ export class SlotInfoCommand extends AbstractCommandBase<SlotInfoCommandResponse
 
 	deserialize (msg: ResponseMessage) {
 		const res: SlotInfoCommandResponse = {
-			SlotId: parseInt(msg.Params['slot id'], 10),
-			Status: msg.Params['status'] as SlotStatus,
-			VolumeName: msg.Params['volume name'],
-			RecordingTime: parseInt(msg.Params['recording time'], 10),
-			VideoFormat: msg.Params['video format'] as VideoFormat
+			slotId: parseInt(msg.params['slot id'], 10),
+			status: msg.params['status'] as SlotStatus,
+			volumeName: msg.params['volume name'],
+			recordingTime: parseInt(msg.params['recording time'], 10),
+			videoFormat: msg.params['video format'] as VideoFormat
 		}
 		return res
 	}
 	serialize () {
 		const res: NamedMessage = {
-			Name: 'slot info',
-			Params: {}
+			name: 'slot info',
+			params: {}
 		}
 
 		return res

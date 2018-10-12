@@ -5,11 +5,11 @@ import { IHandler } from './iHandler'
 import { AsynchronousCode } from '../codes'
 
 export interface SlotInfoChangeResponse {
-	SlotId: SlotId
-	Status?: SlotStatus
-	VolumeName?: string
-	RecordingTime?: number
-	VideoFormat?: VideoFormat
+	slotId: SlotId
+	status?: SlotStatus
+	volumeName?: string
+	recordingTime?: number
+	videoFormat?: VideoFormat
 }
 
 export class SlotInfoChange implements IHandler {
@@ -18,11 +18,11 @@ export class SlotInfoChange implements IHandler {
 
 	deserialize (msg: ResponseMessage) {
 		const res: SlotInfoChangeResponse = {
-			SlotId: parseInt(msg.Params['slot id'], 10),
-			Status: msg.Params['status'] as SlotStatus,
-			VolumeName: msg.Params['volume name'],
-			RecordingTime: parseIntIfDefined(msg.Params['recording time']),
-			VideoFormat: msg.Params['video format'] as VideoFormat
+			slotId: parseInt(msg.params['slot id'], 10),
+			status: msg.params['status'] as SlotStatus,
+			volumeName: msg.params['volume name'],
+			recordingTime: parseIntIfDefined(msg.params['recording time']),
+			videoFormat: msg.params['video format'] as VideoFormat
 		}
 		return res
 	}

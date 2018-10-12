@@ -3,9 +3,9 @@ import { ResponseMessage, NamedMessage } from '../message'
 import { AbstractCommandBase } from './abstractCommand'
 
 export interface DeviceInfoCommandResponse {
-	ProtocolVersion: number
-	Model: string
-	UniqueId: string
+	protocolVersion: number
+	model: string
+	uniqueId: string
 }
 
 export class DeviceInfoCommand extends AbstractCommandBase<DeviceInfoCommandResponse> {
@@ -13,16 +13,16 @@ export class DeviceInfoCommand extends AbstractCommandBase<DeviceInfoCommandResp
 
 	deserialize (msg: ResponseMessage) {
 		const res: DeviceInfoCommandResponse = {
-			ProtocolVersion: parseFloat(msg.Params['protocol version']),
-			Model: msg.Params['model'],
-			UniqueId: msg.Params['unique id']
+			protocolVersion: parseFloat(msg.params['protocol version']),
+			model: msg.params['model'],
+			uniqueId: msg.params['unique id']
 		}
 		return res
 	}
 	serialize () {
 		const res: NamedMessage = {
-			Name: 'device info',
-			Params: {}
+			name: 'device info',
+			params: {}
 		}
 
 		return res

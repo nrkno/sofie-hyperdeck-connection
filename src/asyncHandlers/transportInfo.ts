@@ -5,15 +5,15 @@ import { IHandler } from './iHandler'
 import { AsynchronousCode } from '../codes'
 
 export interface TransportInfoChangeResponse {
-	Status?: TransportStatus
-	Speed?: number
-	SlotId?: SlotId | null
-	ClipId?: number | null
-	SingleClip?: boolean
-	DisplayTimecode?: string
-	Timecode?: string
-	VideoFormat?: VideoFormat
-	Loop?: boolean
+	status?: TransportStatus
+	speed?: number
+	slotId?: SlotId | null
+	clipId?: number | null
+	singleClip?: boolean
+	displayTimecode?: string
+	timecode?: string
+	videoFormat?: VideoFormat
+	loop?: boolean
 }
 
 export class TransportInfoChange implements IHandler {
@@ -22,15 +22,15 @@ export class TransportInfoChange implements IHandler {
 
 	deserialize (msg: ResponseMessage) {
 		const res: TransportInfoChangeResponse = {
-			Status: msg.Params['status'] as TransportStatus,
-			Speed: parseIntIfDefined(msg.Params['speed']),
-			SlotId: parseIdOrNone(msg.Params['slot id']),
-			ClipId: parseIdOrNone(msg.Params['clip id']),
-			SingleClip: parseBool(msg.Params['single clip']),
-			DisplayTimecode: msg.Params['display timecode'],
-			Timecode: msg.Params['timecode'],
-			VideoFormat: msg.Params['video format'] as VideoFormat,
-			Loop: parseBool(msg.Params['loop'])
+			status: msg.params['status'] as TransportStatus,
+			speed: parseIntIfDefined(msg.params['speed']),
+			slotId: parseIdOrNone(msg.params['slot id']),
+			clipId: parseIdOrNone(msg.params['clip id']),
+			singleClip: parseBool(msg.params['single clip']),
+			displayTimecode: msg.params['display timecode'],
+			timecode: msg.params['timecode'],
+			videoFormat: msg.params['video format'] as VideoFormat,
+			loop: parseBool(msg.params['loop'])
 		}
 		return res
 	}

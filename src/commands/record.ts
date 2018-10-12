@@ -2,21 +2,21 @@ import { NamedMessage } from '../message'
 import { AbstractCommandBaseNoResponse } from './abstractCommand'
 
 export class RecordCommand extends AbstractCommandBaseNoResponse {
-	Filename: string | undefined
+	filename?: string
 
 	constructor (filename?: string) {
 		super()
 
-		this.Filename = filename
+		this.filename = filename
 	}
 
 	serialize () {
 		const res: NamedMessage = {
-			Name: 'record',
-			Params: {}
+			name: 'record',
+			params: {}
 		}
 
-		if (this.Filename) res.Params.name = this.Filename
+		if (this.filename) res.params.name = this.filename
 
 		return res
 	}

@@ -2,12 +2,12 @@ import * as _ from 'underscore'
 import { ResponseMessage, NamedMessage } from './message'
 
 export function buildMessageStr (msg: NamedMessage) {
-	if (_.isEmpty(msg.Params)) {
-		return msg.Name + '\r\n'
+	if (_.isEmpty(msg.params)) {
+		return msg.name + '\r\n'
 	}
 
-	let str = msg.Name + ':\r\n'
-	_.forEach(msg.Params, (v, k) => {
+	let str = msg.name + ':\r\n'
+	_.forEach(msg.params, (v, k) => {
 		str += k + ': ' + v + '\r\n'
 	})
 
@@ -88,9 +88,9 @@ export class MultilineParser {
 		}
 
 		const res: ResponseMessage = {
-			Code: code,
-			Name: msg,
-			Params: params
+			code: code,
+			name: msg,
+			params: params
 		}
 		return res
 	}

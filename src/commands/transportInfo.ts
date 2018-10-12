@@ -5,15 +5,15 @@ import { AbstractCommandBase } from './abstractCommand'
 import { parseIdOrNone, parseBool } from '../util'
 
 export interface TransportInfoCommandResponse {
-	Status: TransportStatus
-	Speed: number
-	SlotId: SlotId | null
-	ClipId: number | null
-	SingleClip: boolean
-	DisplayTimecode: string
-	Timecode: string
-	VideoFormat: VideoFormat
-	Loop: boolean
+	status: TransportStatus
+	speed: number
+	slotId: SlotId | null
+	clipId: number | null
+	singleClip: boolean
+	displayTimecode: string
+	timecode: string
+	videoFormat: VideoFormat
+	loop: boolean
 }
 
 export class TransportInfoCommand extends AbstractCommandBase<TransportInfoCommandResponse> {
@@ -21,22 +21,22 @@ export class TransportInfoCommand extends AbstractCommandBase<TransportInfoComma
 
 	deserialize (msg: ResponseMessage) {
 		const res: TransportInfoCommandResponse = {
-			Status: msg.Params['status'] as TransportStatus,
-			Speed: parseInt(msg.Params['speed'], 10),
-			SlotId: parseIdOrNone(msg.Params['slot id']) || null,
-			ClipId: parseIdOrNone(msg.Params['clip id']) || null,
-			SingleClip: parseBool(msg.Params['single clip']) || false,
-			DisplayTimecode: msg.Params['display timecode'],
-			Timecode: msg.Params['timecode'],
-			VideoFormat: msg.Params['video format'] as VideoFormat,
-			Loop: parseBool(msg.Params['loop']) || false
+			status: msg.params['status'] as TransportStatus,
+			speed: parseInt(msg.params['speed'], 10),
+			slotId: parseIdOrNone(msg.params['slot id']) || null,
+			clipId: parseIdOrNone(msg.params['clip id']) || null,
+			singleClip: parseBool(msg.params['single clip']) || false,
+			displayTimecode: msg.params['display timecode'],
+			timecode: msg.params['timecode'],
+			videoFormat: msg.params['video format'] as VideoFormat,
+			loop: parseBool(msg.params['loop']) || false
 		}
 		return res
 	}
 	serialize () {
 		const res: NamedMessage = {
-			Name: 'transport info',
-			Params: {}
+			name: 'transport info',
+			params: {}
 		}
 
 		return res

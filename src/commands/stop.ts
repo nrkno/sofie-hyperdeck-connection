@@ -4,8 +4,8 @@ import { AbstractCommandBaseNoResponse } from './abstractCommand'
 export class StopCommand extends AbstractCommandBaseNoResponse {
 	serialize () {
 		const res: NamedMessage = {
-			Name: 'stop',
-			Params: {}
+			name: 'stop',
+			params: {}
 		}
 
 		return res
