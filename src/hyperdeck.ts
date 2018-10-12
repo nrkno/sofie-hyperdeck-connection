@@ -21,6 +21,7 @@ export class Hyperdeck extends EventEmitter {
 
 	event: EventEmitter
 	private socket: Socket
+	private _connected: boolean = false
 	private _log: (...args: any[]) => void
 	private _commandQueue: ICommand[] = []
 	private _pingPeriod: number = 5000
@@ -45,14 +46,16 @@ export class Hyperdeck extends EventEmitter {
 		this.socket.setEncoding('utf8')
 		this.socket.on('error', (e) => this.emit('error', e))
 		this.socket.on('end', () => {
+			this._connected = false
+
 			if (this._pingInterval) {
 				clearInterval(this._pingInterval)
 				this._pingInterval = null
 			}
 
 			this.emit('disconnected')
-		}) // TODO - should this be on close?
-		this.socket.on('data', (d) => this._handleData((d as any) as string)) // TODO - fix this casting mess
+		})
+		this.socket.on('data', (d) => this._handleData(d.toString()))
 
 		for (const h in AsyncHandlers) {
 			try {
@@ -65,7 +68,7 @@ export class Hyperdeck extends EventEmitter {
 	}
 
 	connect (address: string, port?: number) {
-		// TODO - ensure not already connected
+		if (this._connected) return
 
 		const connCommand = new DummyConnectCommand()
 		connCommand.then(c => {
@@ -75,7 +78,10 @@ export class Hyperdeck extends EventEmitter {
 
 			if (this._pingPeriod > 0) {
 				const cmd = new WatchdogPeriodCommand(1 + Math.round(this._pingPeriod / 1000))
-				this.sendCommand(cmd)
+
+				// force the command to send
+				this._commandQueue = [cmd]
+				this._sendQueuedCommand()
 				return cmd.then(() => {
 					this._logDebug('ping: setting up')
 					this._pingInterval = setInterval(() => this._performPing(), this._pingPeriod)
@@ -84,9 +90,11 @@ export class Hyperdeck extends EventEmitter {
 
 			return c
 		}).then((c) => {
+			this._connected = true
 			this.emit('connected', c)
 		}).catch(e => {
-			// TODO - clean up connection etc
+			this._connected = false
+			this.socket.end()
 			this._log('connection failed', e)
 		})
 		this._commandQueue = [connCommand]
@@ -95,16 +103,21 @@ export class Hyperdeck extends EventEmitter {
 	}
 
 	disconnect (): Promise<void> {
-		// TODO - flatten this?
-		return Promise.reject()
-		// return new Promise((resolve, reject) => {
-		// 	this.socket.disconnect().then(() => resolve()).catch(reject)
-		// })
+		if (!this._connected) return Promise.resolve()
+
+		return new Promise((resolve, reject) => {
+			try {
+				this.socket.end()
+				return resolve()
+			} catch (e) {
+				return reject(e)
+			}
+		})
 	}
 
 	sendCommand (...commands: ICommand[]) {
+		if (this._connected) return false
 
-		// TODO - abort if not connected, but make sure watchdog still gets sent
 		commands.forEach(command => {
 			this._commandQueue.push(command)
 			this._logDebug('queued:', this._commandQueue.length)
@@ -113,13 +126,15 @@ export class Hyperdeck extends EventEmitter {
 		if (this._commandQueue.length === 1) {
 			this._sendQueuedCommand()
 		}
+
+		return true
 	}
 
-	private _performPing () {
+	private async _performPing () {
 		const timeout = this._pingPeriod + 1500
 		if (Date.now() - this._lastCommandTime > timeout) {
 			this._log('ping: timed out')
-			// TODO - timed out
+			await this.disconnect()
 		} else if (this._commandQueue.length > 0) {
 			// There are commands queued, which will reset the ping timers once executed
 			this._logDebug('ping: queue has commands')
@@ -157,9 +172,13 @@ export class Hyperdeck extends EventEmitter {
 			return true
 
 		} catch (e) {
-			// TODO - better handling
-			this._log(e)
-			return false
+			this._log('socket write failed', e)
+			try {
+				this.socket.end()
+			} catch (e2) {
+				// ignore
+			}
+			return true // It failed, but there is no point trying to send another command
 		}
 	}
 

@@ -22,7 +22,6 @@ export abstract class AbstractCommand<T> implements Promise<T>, ICommand {
 	private _promise: Promise<T>
 
 	constructor () {
-		// TODO - can this be done any cleaner?
 		this._promise = new Promise<T>((resolve, reject) => {
 			this.resolve = resolve
 			this.reject = reject
