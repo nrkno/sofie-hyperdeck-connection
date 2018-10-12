@@ -6,7 +6,7 @@ import { AbstractCommand } from './commands'
 import * as AsyncHandlers from './asyncHandlers'
 import { ResponseMessage } from './message'
 import { DummyConnectCommand, WatchdogPeriodCommand, PingCommand } from './commands/internal'
-import { parseResponse, buildMessageStr } from './parser'
+import { buildMessageStr, MultilineParser } from './parser'
 
 export interface HyperdeckOptions {
 	pingPeriod?: number // set to 0 to disable
@@ -23,11 +23,11 @@ export class Hyperdeck extends EventEmitter {
 	private socket: Socket
 	private _log: (...args: any[]) => void
 	private _commandQueue: AbstractCommand[] = []
-	private _receivedLinesQueue: string[] = []
 	private _pingPeriod: number = 5000
 	private _pingInterval: NodeJS.Timer | null = null
 	private _lastCommandTime: number = 0
 	private _asyncHandlers: {[key: number]: AsyncHandlers.IHandler} = {}
+	private _parser: MultilineParser
 
 	constructor (options?: HyperdeckOptions) {
 		super()
@@ -38,6 +38,8 @@ export class Hyperdeck extends EventEmitter {
 			}
 			if (options.pingPeriod !== undefined) this._pingPeriod = options.pingPeriod
 		}
+
+		this._parser = new MultilineParser(this.DEBUG, this._log)
 
 		this.socket = new Socket()
 		this.socket.setEncoding('utf8')
@@ -161,60 +163,31 @@ export class Hyperdeck extends EventEmitter {
 	}
 
 	private _handleData (data: string) {
-		// add new lines to processing queue
-		const newLines = data.split('\r\n')
-		this._receivedLinesQueue = this._receivedLinesQueue.concat(newLines)
-
-		while (this._receivedLinesQueue.length > 0) {
-			// skip any blank lines
-			if (this._receivedLinesQueue[0] === '') {
-				this._receivedLinesQueue.shift()
-				continue
-			}
-
-			// if the first line has no colon, then it is a single line command
-			if (this._receivedLinesQueue[0].indexOf(':') === -1) {
-				this._parseResponse(this._receivedLinesQueue.splice(0, 1))
-				continue
-			}
-
-			const endLine = this._receivedLinesQueue.indexOf('')
-			if (endLine === -1) {
-				// Not got full response yet
+		const msgs = this._parser.receivedString(data)
+		msgs.forEach(resMsg => {
+			const codeType = GetResponseCodeType(resMsg.Code)
+			if (codeType === ResponseCodeType.Unknown) {
+				// TODO properly
+				console.log('really unknown response code...')
 				return
 			}
-
-			const lines = this._receivedLinesQueue.splice(0, endLine + 1)
-			this._parseResponse(lines)
-		}
-	}
-
-	private _parseResponse (lines: string[]) {
-		const resMsg = parseResponse(lines)
-		if (resMsg === null) return
-
-		const codeType = GetResponseCodeType(resMsg.Code)
-		if (codeType === ResponseCodeType.Unknown) {
-			// TODO properly
-			console.log('really unknown response code...')
-			return
-		}
-
-		if (this.DEBUG) this._log('res', resMsg)
-
-		const codeIsAsync = codeType === ResponseCodeType.Asynchronous
-		if (codeIsAsync) {
-			this._handleAsyncResponse(resMsg)
-			// leave it to fall through in case the queued command is waiting for an async response
-		}
-
-		if (this._commandQueue.length > 0 && (!codeIsAsync || this._commandQueue[0].expectedResponseCode === resMsg.Code)) {
-			const cmd = this._commandQueue[0]
-			this._commandQueue.shift()
-
-			cmd.handle(resMsg)
-			this._sendQueuedCommand()
-		}
+	
+			if (this.DEBUG) this._log('res', resMsg)
+	
+			const codeIsAsync = codeType === ResponseCodeType.Asynchronous
+			if (codeIsAsync) {
+				this._handleAsyncResponse(resMsg)
+				// leave it to fall through in case the queued command is waiting for an async response
+			}
+	
+			if (this._commandQueue.length > 0 && (!codeIsAsync || this._commandQueue[0].expectedResponseCode === resMsg.Code)) {
+				const cmd = this._commandQueue[0]
+				this._commandQueue.shift()
+	
+				cmd.handle(resMsg)
+				this._sendQueuedCommand()
+			}
+		})
 	}
 
 	private _handleAsyncResponse (msg: ResponseMessage) {
