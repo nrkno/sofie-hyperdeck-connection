@@ -1,10 +1,10 @@
 import { AsynchronousCode } from '../codes'
 import { ResponseMessage, NamedMessage } from '../message'
-import { AbstractCommandBase, AbstractCommandBaseNoResponse } from './abstractCommand'
+import { AbstractCommand, AbstractCommandNoResponse } from './abstractCommand'
 import { ConnectionInfoResponse } from './connect'
 
 // Purpose of this is to emit the connect event with the connectionInfo
-export class DummyConnectCommand extends AbstractCommandBase<ConnectionInfoResponse> {
+export class DummyConnectCommand extends AbstractCommand<ConnectionInfoResponse> {
 	expectedResponseCode = AsynchronousCode.ConnectionInfo
 
 	deserialize (msg: ResponseMessage) {
@@ -20,7 +20,7 @@ export class DummyConnectCommand extends AbstractCommandBase<ConnectionInfoRespo
 	}
 }
 
-export class WatchdogPeriodCommand extends AbstractCommandBaseNoResponse {
+export class WatchdogPeriodCommand extends AbstractCommandNoResponse {
 	readonly Period: number
 
 	constructor (period: number) {
@@ -40,7 +40,7 @@ export class WatchdogPeriodCommand extends AbstractCommandBaseNoResponse {
 	}
 }
 
-export class PingCommand extends AbstractCommandBaseNoResponse {
+export class PingCommand extends AbstractCommandNoResponse {
 	serialize () {
 		const res: NamedMessage = {
 			name: 'ping',

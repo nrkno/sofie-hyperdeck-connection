@@ -1,6 +1,6 @@
 import { SynchronousCode } from '../codes'
 import { ResponseMessage, NamedMessage } from '../message'
-import { AbstractCommandBase } from './abstractCommand'
+import { AbstractCommand } from './abstractCommand'
 
 export interface DeviceInfoCommandResponse {
 	protocolVersion: number
@@ -8,7 +8,7 @@ export interface DeviceInfoCommandResponse {
 	uniqueId: string
 }
 
-export class DeviceInfoCommand extends AbstractCommandBase<DeviceInfoCommandResponse> {
+export class DeviceInfoCommand extends AbstractCommand<DeviceInfoCommandResponse> {
 	expectedResponseCode = SynchronousCode.DeviceInfo
 
 	deserialize (msg: ResponseMessage) {

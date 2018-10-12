@@ -4,7 +4,7 @@ import { ResponseMessage, NamedMessage } from '../message'
 export interface ErrorResponse extends ResponseMessage {
 }
 
-export interface AbstractCommand extends Promise<any> {
+export interface ICommand extends Promise<any> {
 	expectedResponseCode: ResponseCode
 
 	handle (msg: ResponseMessage)
@@ -12,10 +12,10 @@ export interface AbstractCommand extends Promise<any> {
 	serialize (): NamedMessage | null
 }
 
-export abstract class AbstractCommandBase<T> implements Promise<T>, AbstractCommand {
+export abstract class AbstractCommand<T> implements Promise<T>, ICommand {
 	abstract expectedResponseCode: ResponseCode
 
-	[Symbol.toStringTag] // TODO what is this??
+	[Symbol.toStringTag]
 
 	protected resolve: (res: T) => void
 	protected reject: (res: ErrorResponse) => void
@@ -48,7 +48,7 @@ export abstract class AbstractCommandBase<T> implements Promise<T>, AbstractComm
 	}
 }
 
-export abstract class AbstractCommandBaseNoResponse extends AbstractCommandBase<void> {
+export abstract class AbstractCommandNoResponse extends AbstractCommand<void> {
 	expectedResponseCode = SynchronousCode.OK
 
 	deserialize (msg: ResponseMessage): void {

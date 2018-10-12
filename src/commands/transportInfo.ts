@@ -1,7 +1,7 @@
 import { SynchronousCode } from '../codes'
 import { TransportStatus, SlotId, VideoFormat } from '../enums'
 import { ResponseMessage, NamedMessage } from '../message'
-import { AbstractCommandBase } from './abstractCommand'
+import { AbstractCommand } from './abstractCommand'
 import { parseIdOrNone, parseBool } from '../util'
 
 export interface TransportInfoCommandResponse {
@@ -16,7 +16,7 @@ export interface TransportInfoCommandResponse {
 	loop: boolean
 }
 
-export class TransportInfoCommand extends AbstractCommandBase<TransportInfoCommandResponse> {
+export class TransportInfoCommand extends AbstractCommand<TransportInfoCommandResponse> {
 	expectedResponseCode = SynchronousCode.TransportInfo
 
 	deserialize (msg: ResponseMessage) {

@@ -1,7 +1,7 @@
 import { SynchronousCode } from '../codes'
 import { SlotId, VideoFormat, SlotStatus } from '../enums'
 import { ResponseMessage, NamedMessage } from '../message'
-import { AbstractCommandBase } from './abstractCommand'
+import { AbstractCommand } from './abstractCommand'
 
 export interface SlotInfoCommandResponse {
 	slotId: SlotId
@@ -11,7 +11,7 @@ export interface SlotInfoCommandResponse {
 	videoFormat: VideoFormat
 }
 
-export class SlotInfoCommand extends AbstractCommandBase<SlotInfoCommandResponse> {
+export class SlotInfoCommand extends AbstractCommand<SlotInfoCommandResponse> {
 	expectedResponseCode = SynchronousCode.SlotInfo
 
 	deserialize (msg: ResponseMessage) {

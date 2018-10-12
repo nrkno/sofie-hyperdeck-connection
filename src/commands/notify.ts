@@ -1,6 +1,6 @@
 import { SynchronousCode } from '../codes'
 import { ResponseMessage, NamedMessage } from '../message'
-import { AbstractCommandBase, AbstractCommandBaseNoResponse } from './abstractCommand'
+import { AbstractCommand, AbstractCommandNoResponse } from './abstractCommand'
 import { SetBoolIfDefined } from '../util'
 
 export interface NotifyCommandResponse {
@@ -11,7 +11,7 @@ export interface NotifyCommandResponse {
 	droppedFrames: boolean
 }
 
-export class NotifyGetCommand extends AbstractCommandBase<NotifyCommandResponse> {
+export class NotifyGetCommand extends AbstractCommand<NotifyCommandResponse> {
 	expectedResponseCode = SynchronousCode.Notify
 
 	deserialize (msg: ResponseMessage) {
@@ -34,7 +34,7 @@ export class NotifyGetCommand extends AbstractCommandBase<NotifyCommandResponse>
 	}
 }
 
-export class NotifySetCommand extends AbstractCommandBaseNoResponse {
+export class NotifySetCommand extends AbstractCommandNoResponse {
 	remote?: boolean
 	transport?: boolean
 	slot?: boolean

@@ -1,7 +1,7 @@
 import { NamedMessage } from '../message'
-import { AbstractCommandBaseNoResponse } from './abstractCommand'
+import { AbstractCommandNoResponse } from './abstractCommand'
 
-export class RecordCommand extends AbstractCommandBaseNoResponse {
+export class RecordCommand extends AbstractCommandNoResponse {
 	filename?: string
 
 	constructor (filename?: string) {

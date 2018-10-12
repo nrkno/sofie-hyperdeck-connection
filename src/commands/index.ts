@@ -1,4 +1,4 @@
-export { AbstractCommand, ErrorResponse } from './abstractCommand'
+export { ICommand, ErrorResponse } from './abstractCommand'
 
 export * from './connect'
 export * from './deviceInfo'

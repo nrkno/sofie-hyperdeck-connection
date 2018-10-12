@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'
 import { Socket } from 'net'
 
 import { ResponseCodeType, GetResponseCodeType, AsynchronousCode } from './codes'
-import { AbstractCommand } from './commands'
+import { ICommand } from './commands'
 import * as AsyncHandlers from './asyncHandlers'
 import { ResponseMessage } from './message'
 import { DummyConnectCommand, WatchdogPeriodCommand, PingCommand } from './commands/internal'
@@ -22,7 +22,7 @@ export class Hyperdeck extends EventEmitter {
 	event: EventEmitter
 	private socket: Socket
 	private _log: (...args: any[]) => void
-	private _commandQueue: AbstractCommand[] = []
+	private _commandQueue: ICommand[] = []
 	private _pingPeriod: number = 5000
 	private _pingInterval: NodeJS.Timer | null = null
 	private _lastCommandTime: number = 0
@@ -102,7 +102,7 @@ export class Hyperdeck extends EventEmitter {
 		// })
 	}
 
-	sendCommand (...commands: AbstractCommand[]) {
+	sendCommand (...commands: ICommand[]) {
 
 		// TODO - abort if not connected, but make sure watchdog still gets sent
 		commands.forEach(command => {
@@ -143,7 +143,7 @@ export class Hyperdeck extends EventEmitter {
 		}
 	}
 
-	private _sendCommand (command: AbstractCommand): boolean {
+	private _sendCommand (command: ICommand): boolean {
 		const msg = command.serialize()
 		if (msg === null) return false
 
