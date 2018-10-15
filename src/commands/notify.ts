@@ -11,7 +11,7 @@ export interface NotifyCommandResponse {
 	droppedFrames: boolean
 }
 
-export class NotifyGetCommand extends AbstractCommand<NotifyCommandResponse> {
+export class NotifyGetCommand extends AbstractCommand {
 	expectedResponseCode = SynchronousCode.Notify
 
 	deserialize (msg: ResponseMessage) {

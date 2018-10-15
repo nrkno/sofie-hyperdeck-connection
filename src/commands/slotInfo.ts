@@ -11,7 +11,7 @@ export interface SlotInfoCommandResponse {
 	videoFormat: VideoFormat
 }
 
-export class SlotInfoCommand extends AbstractCommand<SlotInfoCommandResponse> {
+export class SlotInfoCommand extends AbstractCommand {
 	expectedResponseCode = SynchronousCode.SlotInfo
 
 	deserialize (msg: ResponseMessage) {

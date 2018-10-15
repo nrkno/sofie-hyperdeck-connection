@@ -16,7 +16,7 @@ export interface TransportInfoCommandResponse {
 	loop: boolean
 }
 
-export class TransportInfoCommand extends AbstractCommand<TransportInfoCommandResponse> {
+export class TransportInfoCommand extends AbstractCommand {
 	expectedResponseCode = SynchronousCode.TransportInfo
 
 	deserialize (msg: ResponseMessage) {

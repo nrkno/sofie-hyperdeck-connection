@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'
 import { Socket } from 'net'
 
 import { ResponseCodeType, GetResponseCodeType, AsynchronousCode } from './codes'
-import { ICommand } from './commands'
+import { AbstractCommand, ErrorResponse } from './commands'
 import * as AsyncHandlers from './asyncHandlers'
 import { ResponseMessage } from './message'
 import { DummyConnectCommand, WatchdogPeriodCommand, PingCommand } from './commands/internal'
@@ -12,6 +12,22 @@ export interface HyperdeckOptions {
 	pingPeriod?: number // set to 0 to disable
 	debug?: boolean
 	externalLog?: (arg0?: any, arg1?: any, arg2?: any, arg3?: any) => void
+}
+
+class QueuedCommand {
+	public readonly promise: Promise<any>;
+	public readonly command: AbstractCommand;
+	
+	public resolve: (res: any) => void
+	public reject: (res: ErrorResponse) => void
+
+	constructor(command: AbstractCommand) {
+		this.command = command;
+		this.promise = new Promise((resolve, reject) => {
+			this.resolve = resolve
+			this.reject = reject
+		})
+	}
 }
 
 export class Hyperdeck extends EventEmitter {
@@ -24,7 +40,7 @@ export class Hyperdeck extends EventEmitter {
 	private _connected: boolean = false
 	private _retryConnectTimeout: NodeJS.Timer
 	private _log: (...args: any[]) => void
-	private _commandQueue: ICommand[] = []
+	private _commandQueue: QueuedCommand[] = []
 	private _pingPeriod: number = 5000
 	private _pingInterval: NodeJS.Timer | null = null
 	private _lastCommandTime: number = 0
@@ -82,8 +98,8 @@ export class Hyperdeck extends EventEmitter {
 		if (this._connection_active) return
 		this._connection_active = true
 
-		const connCommand = new DummyConnectCommand()
-		connCommand.then(c => {
+		this._commandQueue = []
+		this._queueCommand(new DummyConnectCommand()).then(c => {
 			// TODO - we can filter supported versions here. for now we shall not as it is likely that there will not be any issues
 			// if (c.protocolVersion !== 1.6) {
 			// 	throw new Error('unknown protocol version: ' + c.protocolVersion)
@@ -93,9 +109,10 @@ export class Hyperdeck extends EventEmitter {
 				const cmd = new WatchdogPeriodCommand(1 + Math.round(this._pingPeriod / 1000))
 
 				// force the command to send
-				this._commandQueue = [cmd]
+				this._commandQueue = []
+				const prom = this._queueCommand(cmd)
 				this._sendQueuedCommand()
-				return cmd.then(() => {
+				return prom.then(() => {
 					this._logDebug('ping: setting up')
 					this._pingInterval = setInterval(() => this._performPing(), this._pingPeriod)
 				}).then(() => c)
@@ -113,7 +130,6 @@ export class Hyperdeck extends EventEmitter {
 			
 			this._triggerRetryConnection()
 		})
-		this._commandQueue = [connCommand]
 
 		this._host = address
 		this._port = port || this.DEFAULT_PORT
@@ -136,19 +152,17 @@ export class Hyperdeck extends EventEmitter {
 		})
 	}
 
-	sendCommand (...commands: ICommand[]) {
-		if (!this._connected) return false
+	sendCommand (command: AbstractCommand): Promise<any> {
+		if (!this._connected) return Promise.reject()
 
-		commands.forEach(command => {
-			this._commandQueue.push(command)
-			this._logDebug('queued:', this._commandQueue.length)
-		})
-
+		const res = this._queueCommand(command)
+		this._logDebug('queued:', this._commandQueue.length)
+		
 		if (this._commandQueue.length === 1) {
 			this._sendQueuedCommand()
 		}
 
-		return true
+		return res
 	}
 	
 	get connected () {
@@ -198,8 +212,14 @@ export class Hyperdeck extends EventEmitter {
 		}
 	}
 
-	private _sendCommand (command: ICommand): boolean {
-		const msg = command.serialize()
+	private _queueCommand (command: AbstractCommand): Promise<any> {
+		const cmdWrapper = new QueuedCommand(command);
+		this._commandQueue.push(cmdWrapper)
+		return cmdWrapper.promise
+	}
+
+	private _sendCommand (command: QueuedCommand): boolean {
+		const msg = command.command.serialize()
 		if (msg === null) return false
 
 		const cmdString = buildMessageStr(msg)
@@ -239,11 +259,16 @@ export class Hyperdeck extends EventEmitter {
 				// leave it to fall through in case the queued command is waiting for an async response
 			}
 
-			if (this._commandQueue.length > 0 && (!codeIsAsync || this._commandQueue[0].expectedResponseCode === resMsg.code)) {
+			if (this._commandQueue.length > 0 && (!codeIsAsync || this._commandQueue[0].command.expectedResponseCode === resMsg.code)) {
 				const cmd = this._commandQueue[0]
 				this._commandQueue.shift()
 
-				cmd.handle(resMsg)
+				if (cmd.command.expectedResponseCode === resMsg.code) {
+					cmd.resolve(cmd.command.deserialize(resMsg))
+				} else {
+					cmd.reject(resMsg)
+				}
+
 				this._sendQueuedCommand()
 			}
 		})

@@ -240,9 +240,7 @@ describe('Hyperdeck', () => {
 		expect(onSocketCreate).toHaveBeenCalledTimes(1)
 
 		let onResolve = jest.fn()
-		const stopCommand = new StopCommand()
-		stopCommand.then(onResolve)
-		hp.sendCommand(stopCommand)
+		hp.sendCommand(new StopCommand()).then(onResolve)
 		
 		await waitALittleBit()
 		expect(onSocketWrite).toHaveBeenCalledTimes(1)
@@ -285,9 +283,7 @@ describe('Hyperdeck', () => {
 		expect(onSocketCreate).toHaveBeenCalledTimes(1)
 
 		let onResolve = jest.fn()
-		const stopCommand = new StopCommand()
-		stopCommand.catch(onResolve)
-		hp.sendCommand(stopCommand)
+		hp.sendCommand(new StopCommand()).catch(onResolve)
 		
 		await waitALittleBit()
 		expect(onSocketWrite).toHaveBeenCalledTimes(1)
@@ -378,9 +374,7 @@ describe('Hyperdeck', () => {
 		hp.on('notify.slot', onAsyncReceive)
 
 		let onResolve = jest.fn()
-		const stopCommand = new StopCommand()
-		stopCommand.then(onResolve)
-		hp.sendCommand(stopCommand)
+		hp.sendCommand(new StopCommand()).then(onResolve)
 		
 		await waitALittleBit()
 		expect(onAsyncReceive).toHaveBeenCalledTimes(1)
