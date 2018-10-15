@@ -1,7 +1,7 @@
 
 import { Socket as MockSocket } from 'net'
 import { Hyperdeck } from '../hyperdeck'
-import { StopCommand } from '../commands';
+import { StopCommand } from '../commands'
 
 jest.mock('net')
 let setTimeoutOrg = setTimeout
@@ -29,12 +29,12 @@ describe('Hyperdeck', () => {
 	beforeEach(() => {
 		now = 10000
 	})
-	
+
 	test('Check simple connection', async () => {
 		let onSocketCreate = jest.fn()
 		let onConnection = jest.fn()
 		let onSocketWrite = jest.fn()
-		
+
 		// @ts-ignore MockSocket
 		MockSocket.mockOnNextSocket((socket: any) => {
 			onSocketCreate(onSocketCreate)
@@ -48,7 +48,7 @@ describe('Hyperdeck', () => {
 		})
 
 		const hp = new Hyperdeck({ pingPeriod: 0 })
-		
+
 		let onClientConnection = jest.fn()
 		let onClientError = jest.fn()
 		hp.on('connected', onClientConnection)
@@ -65,7 +65,7 @@ describe('Hyperdeck', () => {
 		expect(onSocketCreate).toHaveBeenCalledTimes(1)
 		expect(onSocketWrite).toHaveBeenCalledTimes(0)
 	})
-	
+
 	test('Check connection retry', async () => {
 		jest.useFakeTimers()
 
@@ -73,7 +73,7 @@ describe('Hyperdeck', () => {
 		let onConnection = jest.fn()
 		let onDisconnection = jest.fn()
 		let onSocketWrite = jest.fn()
-		
+
 		let thisSocket
 		// @ts-ignore MockSocket
 		MockSocket.mockOnNextSocket((socket: any) => {
@@ -89,7 +89,7 @@ describe('Hyperdeck', () => {
 		})
 
 		const hp = new Hyperdeck({ pingPeriod: 0 })
-		
+
 		let onClientConnection = jest.fn()
 		let onClientError = jest.fn()
 		hp.on('connected', onClientConnection)
@@ -106,21 +106,21 @@ describe('Hyperdeck', () => {
 
 		thisSocket.end()
 		await waitALittleBit()
-		
+
 		expect(hp.connected).toBeFalsy()
 		expect(onDisconnection).toHaveBeenCalledTimes(1)
-		
+
 		advanceTime(6000)
 
 		expect(onSocketCreate).toHaveBeenCalledTimes(1)
 		expect(onSocketWrite).toHaveBeenCalledTimes(0)
 	})
-	
+
 	// test('Check protocol version', async () => {
 	// 	let onSocketCreate = jest.fn()
 	// 	let onConnection = jest.fn()
 	// 	let onSocketWrite = jest.fn()
-		
+
 	// 	// @ts-ignore MockSocket
 	// 	MockSocket.mockOnNextSocket((socket: any) => {
 	// 		onSocketCreate(onSocketCreate)
@@ -134,7 +134,7 @@ describe('Hyperdeck', () => {
 	// 	})
 
 	// 	const hp = new Hyperdeck({ pingPeriod: 0 })
-		
+
 	// 	let onClientConnection = jest.fn()
 	// 	let onClientError = jest.fn()
 	// 	hp.on('connected', onClientConnection)
@@ -151,14 +151,14 @@ describe('Hyperdeck', () => {
 	// 	expect(onSocketCreate).toHaveBeenCalledTimes(1)
 	// 	expect(onSocketWrite).toHaveBeenCalledTimes(0)
 	// })
-	
+
 	test('Check ping setup', async () => {
 		jest.useFakeTimers()
 
 		let onSocketCreate = jest.fn()
 		let onConnection = jest.fn()
 		let onSocketWrite = jest.fn()
-		
+
 		// @ts-ignore MockSocket
 		MockSocket.mockOnNextSocket((socket: any) => {
 			onSocketCreate(onSocketCreate)
@@ -169,13 +169,13 @@ describe('Hyperdeck', () => {
 			}
 
 			socket.onWrite = onSocketWrite
-			
+
 			socket.mockExpectedWrite('watchdog:\r\nperiod: 13\r\n\r\n', '200 ok\r\n')
 			socket.mockExpectedWrite('ping\r\n', '200 ok\r\n')
 		})
 
 		const hp = new Hyperdeck({ pingPeriod: 12000 })
-		
+
 		let onClientConnection = jest.fn()
 		let onClientError = jest.fn()
 		hp.on('connected', onClientConnection)
@@ -191,7 +191,7 @@ describe('Hyperdeck', () => {
 
 		expect(onSocketCreate).toHaveBeenCalledTimes(1)
 		expect(onSocketWrite).toHaveBeenCalledTimes(1)
-		
+
 		// Advance so that a ping should send
 		advanceTime(12200)
 		expect(onSocketWrite).toHaveBeenCalledTimes(2)
@@ -201,14 +201,14 @@ describe('Hyperdeck', () => {
 
 		expect(hp.connected).toBeFalsy()
 
-		hp.disconnect()
+		await hp.disconnect()
 	})
 
 	test('Check send command correct response', async () => {
 		let onSocketCreate = jest.fn()
 		let onConnection = jest.fn()
 		let onSocketWrite = jest.fn()
-		
+
 		// @ts-ignore MockSocket
 		MockSocket.mockOnNextSocket((socket: any) => {
 			onSocketCreate(onSocketCreate)
@@ -219,12 +219,12 @@ describe('Hyperdeck', () => {
 			}
 
 			socket.onWrite = onSocketWrite
-			
+
 			socket.mockExpectedWrite('stop\r\n', '200 ok\r\n')
 		})
 
 		const hp = new Hyperdeck({ pingPeriod: 0 })
-		
+
 		let onClientConnection = jest.fn()
 		let onClientError = jest.fn()
 		hp.on('connected', onClientConnection)
@@ -240,9 +240,8 @@ describe('Hyperdeck', () => {
 		expect(onSocketCreate).toHaveBeenCalledTimes(1)
 
 		let onResolve = jest.fn()
-		hp.sendCommand(new StopCommand()).then(onResolve)
-		
-		await waitALittleBit()
+		await hp.sendCommand(new StopCommand()).then(onResolve)
+
 		expect(onSocketWrite).toHaveBeenCalledTimes(1)
 		expect(onResolve).toHaveBeenCalledTimes(1)
 	})
@@ -251,7 +250,7 @@ describe('Hyperdeck', () => {
 		let onSocketCreate = jest.fn()
 		let onConnection = jest.fn()
 		let onSocketWrite = jest.fn()
-		
+
 		// @ts-ignore MockSocket
 		MockSocket.mockOnNextSocket((socket: any) => {
 			onSocketCreate(onSocketCreate)
@@ -262,12 +261,12 @@ describe('Hyperdeck', () => {
 			}
 
 			socket.onWrite = onSocketWrite
-			
+
 			socket.mockExpectedWrite('stop\r\n', '202 wrong\r\n')
 		})
 
 		const hp = new Hyperdeck({ pingPeriod: 0 })
-		
+
 		let onClientConnection = jest.fn()
 		let onClientError = jest.fn()
 		hp.on('connected', onClientConnection)
@@ -284,7 +283,7 @@ describe('Hyperdeck', () => {
 
 		let onResolve = jest.fn()
 		hp.sendCommand(new StopCommand()).catch(onResolve)
-		
+
 		await waitALittleBit()
 		expect(onSocketWrite).toHaveBeenCalledTimes(1)
 		expect(onResolve).toHaveBeenCalledTimes(1)
@@ -294,7 +293,7 @@ describe('Hyperdeck', () => {
 		let onSocketCreate = jest.fn()
 		let onConnection = jest.fn()
 		let onSocketWrite = jest.fn()
-		
+
 		let thisSocket
 		// @ts-ignore MockSocket
 		MockSocket.mockOnNextSocket((socket: any) => {
@@ -310,7 +309,7 @@ describe('Hyperdeck', () => {
 		})
 
 		const hp = new Hyperdeck({ pingPeriod: 0 })
-		
+
 		let onClientConnection = jest.fn()
 		let onClientError = jest.fn()
 		hp.on('connected', onClientConnection)
@@ -329,7 +328,7 @@ describe('Hyperdeck', () => {
 		hp.on('notify.slot', onAsyncReceive)
 
 		thisSocket.mockData('502 fake slot async')
-		
+
 		await waitALittleBit()
 		expect(onAsyncReceive).toHaveBeenCalledTimes(1)
 	})
@@ -338,7 +337,8 @@ describe('Hyperdeck', () => {
 		let onSocketCreate = jest.fn()
 		let onConnection = jest.fn()
 		let onSocketWrite = jest.fn()
-		
+
+		let thisSocket
 		// @ts-ignore MockSocket
 		MockSocket.mockOnNextSocket((socket: any) => {
 			onSocketCreate(onSocketCreate)
@@ -349,13 +349,14 @@ describe('Hyperdeck', () => {
 			}
 
 			socket.onWrite = onSocketWrite
-			
+			thisSocket = socket
+
 			// instead respond with unrelated async
 			socket.mockExpectedWrite('stop\r\n', '502 slot async\r\n')
 		})
 
 		const hp = new Hyperdeck({ pingPeriod: 0 })
-		
+
 		let onClientConnection = jest.fn()
 		let onClientError = jest.fn()
 		hp.on('connected', onClientConnection)
@@ -374,12 +375,15 @@ describe('Hyperdeck', () => {
 		hp.on('notify.slot', onAsyncReceive)
 
 		let onResolve = jest.fn()
-		hp.sendCommand(new StopCommand()).then(onResolve)
-		
+		const res = hp.sendCommand(new StopCommand()).then(onResolve)
+
 		await waitALittleBit()
 		expect(onAsyncReceive).toHaveBeenCalledTimes(1)
-		
+
 		expect(onResolve).toHaveBeenCalledTimes(0) // should not have resolved as we havent sent the response
+
+		thisSocket.mockData('200 ok\r\n')
+		await res
 	})
-	
+
 })

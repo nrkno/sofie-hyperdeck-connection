@@ -34,18 +34,20 @@ export class Socket extends EventEmitter {
 	// this.emit('close')
 	// this.emit('end')
 
-	public setEncoding () {
+	public setEncoding (enc: string) {
+		enc = enc
 	}
 
-	public mockExpectedWrite(call: string, response: string) {
+	public mockExpectedWrite (call: string, response: string) {
 		this.expectedWrites.push({ call, response })
 	}
 
 	public connect (port, host, cb) {
 		if (this.onConnect) this.onConnect(port, host)
 		setTimeoutOrg(() => {
-			if (cb)
+			if (cb) {
 				cb()
+			}
 
 			this.setConnected()
 		}, 3)

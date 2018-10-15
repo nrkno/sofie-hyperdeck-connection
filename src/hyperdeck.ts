@@ -15,14 +15,14 @@ export interface HyperdeckOptions {
 }
 
 class QueuedCommand {
-	public readonly promise: Promise<any>;
-	public readonly command: AbstractCommand;
-	
+	public readonly promise: Promise<any>
+	public readonly command: AbstractCommand
+
 	public resolve: (res: any) => void
 	public reject: (res: ErrorResponse) => void
 
-	constructor(command: AbstractCommand) {
-		this.command = command;
+	constructor (command: AbstractCommand) {
+		this.command = command
 		this.promise = new Promise((resolve, reject) => {
 			this.resolve = resolve
 			this.reject = reject
@@ -46,8 +46,8 @@ export class Hyperdeck extends EventEmitter {
 	private _lastCommandTime: number = 0
 	private _asyncHandlers: {[key: number]: AsyncHandlers.IHandler} = {}
 	private _parser: MultilineParser
-	
-	private _connection_active: boolean = false // True when connected/connecting/reconnecting
+
+	private _connectionActive: boolean = false // True when connected/connecting/reconnecting
 	private _host: string
 	private _port: number
 
@@ -78,7 +78,7 @@ export class Hyperdeck extends EventEmitter {
 			}
 
 			this.emit('disconnected')
-			
+
 			this._triggerRetryConnection()
 		})
 		this.socket.on('data', (d) => this._handleData(d.toString()))
@@ -95,8 +95,8 @@ export class Hyperdeck extends EventEmitter {
 
 	connect (address: string, port?: number) {
 		if (this._connected) return
-		if (this._connection_active) return
-		this._connection_active = true
+		if (this._connectionActive) return
+		this._connectionActive = true
 
 		this._commandQueue = []
 		this._queueCommand(new DummyConnectCommand()).then(c => {
@@ -127,7 +127,7 @@ export class Hyperdeck extends EventEmitter {
 			this.socket.end()
 			this.emit('error', 'connection failed', e)
 			this._log('connection failed', e)
-			
+
 			this._triggerRetryConnection()
 		})
 
@@ -137,7 +137,7 @@ export class Hyperdeck extends EventEmitter {
 	}
 
 	disconnect (): Promise<void> {
-		this._connection_active = false
+		this._connectionActive = false
 		clearTimeout(this._retryConnectTimeout)
 
 		if (!this._connected) return Promise.resolve()
@@ -157,14 +157,14 @@ export class Hyperdeck extends EventEmitter {
 
 		const res = this._queueCommand(command)
 		this._logDebug('queued:', this._commandQueue.length)
-		
+
 		if (this._commandQueue.length === 1) {
 			this._sendQueuedCommand()
 		}
 
 		return res
 	}
-	
+
 	get connected () {
 		return this._connected
 	}
@@ -179,7 +179,7 @@ export class Hyperdeck extends EventEmitter {
 	private _retryConnection () {
 		clearTimeout(this._retryConnectTimeout)
 
-		if (!this.connected && this._connection_active) {
+		if (!this.connected && this._connectionActive) {
 			this.socket.connect(this._port, this._host)
 		}
 	}
@@ -194,7 +194,7 @@ export class Hyperdeck extends EventEmitter {
 			this._logDebug('ping: queue has commands')
 		} else {
 			this._logDebug('ping: queueing')
-			this.sendCommand(new PingCommand())
+			await this.sendCommand(new PingCommand())
 		}
 	}
 
@@ -213,7 +213,7 @@ export class Hyperdeck extends EventEmitter {
 	}
 
 	private _queueCommand (command: AbstractCommand): Promise<any> {
-		const cmdWrapper = new QueuedCommand(command);
+		const cmdWrapper = new QueuedCommand(command)
 		this._commandQueue.push(cmdWrapper)
 		return cmdWrapper.promise
 	}
