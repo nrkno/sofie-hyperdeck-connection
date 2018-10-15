@@ -13,6 +13,22 @@ function waitALittleBit () {
 }
 
 describe('Hyperdeck', () => {
+	let now: number = 10000
+	beforeAll(() => {
+		Date.now = jest.fn(() => {
+			return getCurrentTime()
+		})
+	})
+	function getCurrentTime () {
+		return now
+	}
+	function advanceTime (advanceTime: number) {
+		now += advanceTime
+		jest.advanceTimersByTime(advanceTime)
+	}
+	beforeEach(() => {
+		now = 10000
+	})
 	
 	test('Check simple connection', async () => {
 		let onSocketCreate = jest.fn()
@@ -50,21 +66,26 @@ describe('Hyperdeck', () => {
 		expect(onSocketWrite).toHaveBeenCalledTimes(0)
 	})
 	
-	test('Check protocol version', async () => {
+	test('Check connection retry', async () => {
+		jest.useFakeTimers()
+
 		let onSocketCreate = jest.fn()
 		let onConnection = jest.fn()
+		let onDisconnection = jest.fn()
 		let onSocketWrite = jest.fn()
 		
+		let thisSocket
 		// @ts-ignore MockSocket
 		MockSocket.mockOnNextSocket((socket: any) => {
 			onSocketCreate(onSocketCreate)
 
 			socket.onConnect = () => {
-				socket.mockData('500 connection info:\r\nprotocol version: 9.9\r\nmodel: test\r\n\r\n')
+				socket.mockData('500 connection info:\r\nprotocol version: 1.6\r\nmodel: test\r\n\r\n')
 				onConnection()
 			}
-
+			socket.onClose = onDisconnection
 			socket.onWrite = onSocketWrite
+			thisSocket = socket
 		})
 
 		const hp = new Hyperdeck({ pingPeriod: 0 })
@@ -77,16 +98,63 @@ describe('Hyperdeck', () => {
 		hp.connect('127.0.0.1')
 		await waitALittleBit()
 
-		expect(hp.connected).toBeFalsy()
-		expect(onClientConnection).toHaveBeenCalledTimes(0)
-		expect(onClientError).toHaveBeenCalledTimes(1)
+		expect(hp.connected).toBeTruthy()
+		expect(onClientConnection).toHaveBeenCalledTimes(1)
+		expect(onClientError).toHaveBeenCalledTimes(0)
 		expect(onConnection).toHaveBeenCalledTimes(1)
+		expect(onDisconnection).toHaveBeenCalledTimes(0)
+
+		thisSocket.end()
+		await waitALittleBit()
+		
+		expect(hp.connected).toBeFalsy()
+		expect(onDisconnection).toHaveBeenCalledTimes(1)
+		
+		advanceTime(6000)
 
 		expect(onSocketCreate).toHaveBeenCalledTimes(1)
 		expect(onSocketWrite).toHaveBeenCalledTimes(0)
 	})
 	
+	// test('Check protocol version', async () => {
+	// 	let onSocketCreate = jest.fn()
+	// 	let onConnection = jest.fn()
+	// 	let onSocketWrite = jest.fn()
+		
+	// 	// @ts-ignore MockSocket
+	// 	MockSocket.mockOnNextSocket((socket: any) => {
+	// 		onSocketCreate(onSocketCreate)
+
+	// 		socket.onConnect = () => {
+	// 			socket.mockData('500 connection info:\r\nprotocol version: 9.9\r\nmodel: test\r\n\r\n')
+	// 			onConnection()
+	// 		}
+
+	// 		socket.onWrite = onSocketWrite
+	// 	})
+
+	// 	const hp = new Hyperdeck({ pingPeriod: 0 })
+		
+	// 	let onClientConnection = jest.fn()
+	// 	let onClientError = jest.fn()
+	// 	hp.on('connected', onClientConnection)
+	// 	hp.on('error', onClientError)
+
+	// 	hp.connect('127.0.0.1')
+	// 	await waitALittleBit()
+
+	// 	expect(hp.connected).toBeFalsy()
+	// 	expect(onClientConnection).toHaveBeenCalledTimes(0)
+	// 	expect(onClientError).toHaveBeenCalledTimes(1)
+	// 	expect(onConnection).toHaveBeenCalledTimes(1)
+
+	// 	expect(onSocketCreate).toHaveBeenCalledTimes(1)
+	// 	expect(onSocketWrite).toHaveBeenCalledTimes(0)
+	// })
+	
 	test('Check ping setup', async () => {
+		jest.useFakeTimers()
+
 		let onSocketCreate = jest.fn()
 		let onConnection = jest.fn()
 		let onSocketWrite = jest.fn()
@@ -103,6 +171,7 @@ describe('Hyperdeck', () => {
 			socket.onWrite = onSocketWrite
 			
 			socket.mockExpectedWrite('watchdog:\r\nperiod: 13\r\n\r\n', '200 ok\r\n')
+			socket.mockExpectedWrite('ping\r\n', '200 ok\r\n')
 		})
 
 		const hp = new Hyperdeck({ pingPeriod: 12000 })
@@ -122,8 +191,15 @@ describe('Hyperdeck', () => {
 
 		expect(onSocketCreate).toHaveBeenCalledTimes(1)
 		expect(onSocketWrite).toHaveBeenCalledTimes(1)
+		
+		// Advance so that a ping should send
+		advanceTime(12200)
+		expect(onSocketWrite).toHaveBeenCalledTimes(2)
 
-		// TODO - test ping causes a timeout, and sends etc
+		// Advance so socket times out
+		advanceTime(15000)
+
+		expect(hp.connected).toBeFalsy()
 
 		hp.disconnect()
 	})

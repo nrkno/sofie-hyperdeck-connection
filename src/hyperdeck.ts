@@ -22,6 +22,7 @@ export class Hyperdeck extends EventEmitter {
 	event: EventEmitter
 	private socket: Socket
 	private _connected: boolean = false
+	private _retryConnectTimeout: NodeJS.Timer
 	private _log: (...args: any[]) => void
 	private _commandQueue: ICommand[] = []
 	private _pingPeriod: number = 5000
@@ -29,6 +30,10 @@ export class Hyperdeck extends EventEmitter {
 	private _lastCommandTime: number = 0
 	private _asyncHandlers: {[key: number]: AsyncHandlers.IHandler} = {}
 	private _parser: MultilineParser
+	
+	private _connection_active: boolean = false // True when connected/connecting/reconnecting
+	private _host: string
+	private _port: number
 
 	constructor (options?: HyperdeckOptions) {
 		super()
@@ -57,7 +62,8 @@ export class Hyperdeck extends EventEmitter {
 			}
 
 			this.emit('disconnected')
-			// TODO - retry connection
+			
+			this._triggerRetryConnection()
 		})
 		this.socket.on('data', (d) => this._handleData(d.toString()))
 
@@ -73,12 +79,15 @@ export class Hyperdeck extends EventEmitter {
 
 	connect (address: string, port?: number) {
 		if (this._connected) return
+		if (this._connection_active) return
+		this._connection_active = true
 
 		const connCommand = new DummyConnectCommand()
 		connCommand.then(c => {
-			if (c.protocolVersion !== 1.6) {
-				throw new Error('unknown protocol version: ' + c.protocolVersion)
-			}
+			// TODO - we can filter supported versions here. for now we shall not as it is likely that there will not be any issues
+			// if (c.protocolVersion !== 1.6) {
+			// 	throw new Error('unknown protocol version: ' + c.protocolVersion)
+			// }
 
 			if (this._pingPeriod > 0) {
 				const cmd = new WatchdogPeriodCommand(1 + Math.round(this._pingPeriod / 1000))
@@ -101,13 +110,20 @@ export class Hyperdeck extends EventEmitter {
 			this.socket.end()
 			this.emit('error', 'connection failed', e)
 			this._log('connection failed', e)
+			
+			this._triggerRetryConnection()
 		})
 		this._commandQueue = [connCommand]
 
-		this.socket.connect(port || this.DEFAULT_PORT, address)
+		this._host = address
+		this._port = port || this.DEFAULT_PORT
+		this.socket.connect(this._port, this._host)
 	}
 
 	disconnect (): Promise<void> {
+		this._connection_active = false
+		clearTimeout(this._retryConnectTimeout)
+
 		if (!this._connected) return Promise.resolve()
 
 		return new Promise((resolve, reject) => {
@@ -137,6 +153,21 @@ export class Hyperdeck extends EventEmitter {
 	
 	get connected () {
 		return this._connected
+	}
+
+	private _triggerRetryConnection () {
+		if (!this._retryConnectTimeout) {
+			this._retryConnectTimeout = setTimeout(() => {
+				this._retryConnection()
+			}, this.RECONNECT_INTERVAL)
+		}
+	}
+	private _retryConnection () {
+		clearTimeout(this._retryConnectTimeout)
+
+		if (!this.connected && this._connection_active) {
+			this.socket.connect(this._port, this._host)
+		}
 	}
 
 	private async _performPing () {
