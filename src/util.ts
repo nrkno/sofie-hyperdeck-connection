@@ -6,8 +6,6 @@ export function SetBoolIfDefined (msg: NamedMessage, name: string, val: boolean 
 	}
 }
 
-export function literal<T> (o: T) { return o }
-
 export function parseIdOrNone (str: string | undefined): number | null | undefined {
 	if (str === undefined) return undefined
 	if (str === 'none') return null

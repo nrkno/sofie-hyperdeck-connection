@@ -14,7 +14,7 @@ export interface SlotInfoChangeResponse {
 
 export class SlotInfoChange implements IHandler {
 	responseCode = AsynchronousCode.SlotInfo
-	eventName = 'notify.transport'
+	eventName = 'notify.slot'
 
 	deserialize (msg: ResponseMessage) {
 		const res: SlotInfoChangeResponse = {

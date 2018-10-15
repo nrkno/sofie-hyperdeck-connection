@@ -32,11 +32,14 @@ export class Hyperdeck extends EventEmitter {
 
 	constructor (options?: HyperdeckOptions) {
 		super()
+
+		this._log = function (...args: any[]): void {
+			console.log(...args)
+		}
+
 		if (options) {
 			this.DEBUG = options.debug === undefined ? false : options.debug
-			this._log = options.externalLog || function (...args: any[]): void {
-				console.log(...args)
-			}
+			this._log = options.externalLog || this._log
 			if (options.pingPeriod !== undefined) this._pingPeriod = options.pingPeriod
 		}
 
@@ -54,6 +57,7 @@ export class Hyperdeck extends EventEmitter {
 			}
 
 			this.emit('disconnected')
+			// TODO - retry connection
 		})
 		this.socket.on('data', (d) => this._handleData(d.toString()))
 
@@ -95,6 +99,7 @@ export class Hyperdeck extends EventEmitter {
 		}).catch(e => {
 			this._connected = false
 			this.socket.end()
+			this.emit('error', 'connection failed', e)
 			this._log('connection failed', e)
 		})
 		this._commandQueue = [connCommand]
@@ -116,7 +121,7 @@ export class Hyperdeck extends EventEmitter {
 	}
 
 	sendCommand (...commands: ICommand[]) {
-		if (this._connected) return false
+		if (!this._connected) return false
 
 		commands.forEach(command => {
 			this._commandQueue.push(command)
@@ -128,6 +133,10 @@ export class Hyperdeck extends EventEmitter {
 		}
 
 		return true
+	}
+	
+	get connected () {
+		return this._connected
 	}
 
 	private async _performPing () {
