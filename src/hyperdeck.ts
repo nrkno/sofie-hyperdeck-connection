@@ -162,7 +162,7 @@ export class Hyperdeck extends EventEmitter {
 		}
 	}
 
-	private _connectInner() {
+	private _connectInner () {
 		this._commandQueue = []
 		this._queueCommand(new DummyConnectCommand()).then(c => {
 			// TODO - we can filter supported versions here. for now we shall not as it is likely that there will not be any issues
