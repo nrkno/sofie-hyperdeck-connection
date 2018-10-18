@@ -38,7 +38,7 @@ export class Hyperdeck extends EventEmitter {
 	event: EventEmitter
 	private socket: Socket
 	private _connected: boolean = false
-	private _retryConnectTimeout: NodeJS.Timer
+	private _retryConnectTimeout: NodeJS.Timer | null = null
 	private _log: (...args: any[]) => void
 	private _commandQueue: QueuedCommand[] = []
 	private _pingPeriod: number = 5000
@@ -98,47 +98,16 @@ export class Hyperdeck extends EventEmitter {
 		if (this._connectionActive) return
 		this._connectionActive = true
 
-		this._commandQueue = []
-		this._queueCommand(new DummyConnectCommand()).then(c => {
-			// TODO - we can filter supported versions here. for now we shall not as it is likely that there will not be any issues
-			// if (c.protocolVersion !== 1.6) {
-			// 	throw new Error('unknown protocol version: ' + c.protocolVersion)
-			// }
-
-			if (this._pingPeriod > 0) {
-				const cmd = new WatchdogPeriodCommand(1 + Math.round(this._pingPeriod / 1000))
-
-				// force the command to send
-				this._commandQueue = []
-				const prom = this._queueCommand(cmd)
-				this._sendQueuedCommand()
-				return prom.then(() => {
-					this._logDebug('ping: setting up')
-					this._pingInterval = setInterval(() => this._performPing(), this._pingPeriod)
-				}).then(() => c)
-			}
-
-			return c
-		}).then((c) => {
-			this._connected = true
-			this.emit('connected', c)
-		}).catch(e => {
-			this._connected = false
-			this.socket.end()
-			this.emit('error', 'connection failed', e)
-			this._log('connection failed', e)
-
-			this._triggerRetryConnection()
-		})
-
 		this._host = address
 		this._port = port || this.DEFAULT_PORT
-		this.socket.connect(this._port, this._host)
+		this._connectInner()
 	}
 
 	disconnect (): Promise<void> {
 		this._connectionActive = false
-		clearTimeout(this._retryConnectTimeout)
+		if (this._retryConnectTimeout) {
+			clearTimeout(this._retryConnectTimeout)
+		}
 
 		if (!this._connected) return Promise.resolve()
 
@@ -177,11 +146,57 @@ export class Hyperdeck extends EventEmitter {
 		}
 	}
 	private _retryConnection () {
-		clearTimeout(this._retryConnectTimeout)
+		if (this._retryConnectTimeout) {
+			clearTimeout(this._retryConnectTimeout)
+			this._retryConnectTimeout = null
+		}
 
 		if (!this.connected && this._connectionActive) {
-			this.socket.connect(this._port, this._host)
+			try {
+				this._connectInner()
+			} catch (e) {
+				this._triggerRetryConnection()
+				this.emit('error', 'connection failed', e)
+				this._log('connection failed', e)
+			}
 		}
+	}
+
+	private _connectInner() {
+		this._commandQueue = []
+		this._queueCommand(new DummyConnectCommand()).then(c => {
+			// TODO - we can filter supported versions here. for now we shall not as it is likely that there will not be any issues
+			// if (c.protocolVersion !== 1.6) {
+			// 	throw new Error('unknown protocol version: ' + c.protocolVersion)
+			// }
+
+			if (this._pingPeriod > 0) {
+				const cmd = new WatchdogPeriodCommand(1 + Math.round(this._pingPeriod / 1000))
+
+				// force the command to send
+				this._commandQueue = []
+				const prom = this._queueCommand(cmd)
+				this._sendQueuedCommand()
+				return prom.then(() => {
+					this._logDebug('ping: setting up')
+					this._pingInterval = setInterval(() => this._performPing(), this._pingPeriod)
+				}).then(() => c)
+			}
+
+			return c
+		}).then((c) => {
+			this._connected = true
+			this.emit('connected', c)
+		}).catch(e => {
+			this._connected = false
+			this.socket.end()
+			this.emit('error', 'connection failed', e)
+			this._log('connection failed', e)
+
+			this._triggerRetryConnection()
+		})
+
+		this.socket.connect(this._port, this._host)
 	}
 
 	private async _performPing () {
