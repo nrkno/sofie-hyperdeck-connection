@@ -68,6 +68,7 @@ This event will be fired once we have connected with the hyperdeck.
 - `disconnected`
 Whenever the connection is lost. connected may be fired against shortly after if the connection is restored
 
+
 ## Test
 
 This module will run tests by jest.
