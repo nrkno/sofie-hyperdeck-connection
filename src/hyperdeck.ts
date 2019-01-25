@@ -69,15 +69,14 @@ export class Hyperdeck extends EventEmitter {
 		this.socket = new Socket()
 		this.socket.setEncoding('utf8')
 		this.socket.on('error', (e) => this.emit('error', e))
-		this.socket.on('end', () => {
+		this.socket.on('close', () => {
+			if (this._connected) this.emit('disconnected')
 			this._connected = false
 
 			if (this._pingInterval) {
 				clearInterval(this._pingInterval)
 				this._pingInterval = null
 			}
-
-			this.emit('disconnected')
 
 			this._triggerRetryConnection()
 		})
