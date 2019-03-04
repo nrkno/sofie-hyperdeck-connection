@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.1.4"></a>
+## [0.1.4](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.1.3...0.1.4) (2019-03-04)
+
+
+### Bug Fixes
+
+* audit fix for vulnerabilities ([a739543](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/a739543))
+* remove cpx dependencey. Not used, causes errors ([8b3c5e5](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/8b3c5e5))
+
+
+
 <a name="0.1.3"></a>
 ## [0.1.3](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.1.2...0.1.3) (2019-01-25)
 
