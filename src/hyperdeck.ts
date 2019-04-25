@@ -179,7 +179,7 @@ export class Hyperdeck extends EventEmitter {
 				return prom.then(() => {
 					this._logDebug('ping: setting up')
 					this._pingInterval = setInterval(() => {
-						if (this.connected) this._performPing()
+						if (this.connected) this._performPing().catch(e => this.emit('error', e))
 					}, this._pingPeriod)
 				}).then(() => c)
 			}
