@@ -178,7 +178,9 @@ export class Hyperdeck extends EventEmitter {
 				this._sendQueuedCommand()
 				return prom.then(() => {
 					this._logDebug('ping: setting up')
-					this._pingInterval = setInterval(() => this._performPing(), this._pingPeriod)
+					this._pingInterval = setInterval(() => {
+						if (this.connected) this._performPing().catch(e => this.emit('error', e))
+					}, this._pingPeriod)
 				}).then(() => c)
 			}
 
@@ -202,7 +204,9 @@ export class Hyperdeck extends EventEmitter {
 		const timeout = this._pingPeriod + 1500
 		if (Date.now() - this._lastCommandTime > timeout) {
 			this._log('ping: timed out')
-			await this.disconnect()
+			this._connected = false
+			this.emit('disconnected')
+			this._triggerRetryConnection()
 		} else if (this._commandQueue.length > 0) {
 			// There are commands queued, which will reset the ping timers once executed
 			this._logDebug('ping: queue has commands')
