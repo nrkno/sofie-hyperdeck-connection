@@ -14,6 +14,13 @@ export interface SlotInfoCommandResponse {
 export class SlotInfoCommand extends AbstractCommand {
 	expectedResponseCode = SynchronousCode.SlotInfo
 
+	readonly slotId?: number
+
+	constructor (slotId?: number) {
+		super()
+		this.slotId = slotId
+	}
+
 	deserialize (msg: ResponseMessage) {
 		const res: SlotInfoCommandResponse = {
 			slotId: parseInt(msg.params['slot id'], 10),
@@ -29,6 +36,8 @@ export class SlotInfoCommand extends AbstractCommand {
 			name: 'slot info',
 			params: {}
 		}
+
+		if (this.slotId) res.params['slot id'] = this.slotId + ''
 
 		return res
 	}
