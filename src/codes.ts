@@ -27,7 +27,8 @@ export enum SynchronousCode {
 	SlotInfo = 202,
 	DeviceInfo = 204,
 	TransportInfo = 208,
-	Notify = 209
+	Notify = 209,
+	FormatReady = 216
 }
 
 export enum AsynchronousCode {
