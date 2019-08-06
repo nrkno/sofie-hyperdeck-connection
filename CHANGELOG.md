@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.2.0"></a>
+# [0.2.0](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.1.5...0.2.0) (2019-08-06)
+
+
+### Features
+
+* **SlotInfo:** add optional slot id ([a73084b](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/a73084b))
+* disk formatting commands ([6fd124c](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/6fd124c))
+* slot select command ([c70c509](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/c70c509))
+
+
+
 <a name="0.1.5"></a>
 ## [0.1.5](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.1.4...0.1.5) (2019-04-25)
 
