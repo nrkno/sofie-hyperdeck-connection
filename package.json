@@ -98,7 +98,7 @@
     "typescript": "^3.3.3333"
   },
   "resolutions": {
-    "typedoc/marked": "^0.6.2"
+    "typedoc/marked": "^0.7.0"
   },
   "keywords": [
     "blackmagic",
@@ -111,7 +111,6 @@
     "source"
   ],
   "dependencies": {
-    "marked": "^0.6.2",
     "underscore": "^1.9.1",
     "underscore-deep-extend": "^1.1.5"
   },
