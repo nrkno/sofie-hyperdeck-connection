@@ -20,6 +20,11 @@
       "name": "Julian Waller",
       "email": "julian@superfly.tv",
       "url": "http://superfly.tv"
+    },
+    {
+      "name": "Balte de Wit",
+      "email": "balte@superfly.tv",
+      "url": "http://superfly.tv"
     }
   ],
   "scripts": {
@@ -93,7 +98,7 @@
     "typescript": "^3.3.3333"
   },
   "resolutions": {
-    "typedoc/marked": "^0.6.2"
+    "typedoc/marked": "^0.7.0"
   },
   "keywords": [
     "blackmagic",

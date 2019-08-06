@@ -46,3 +46,8 @@ export enum VideoFormat {
 	_4Kp5994 = '4Kp5994',
 	_4Kp60 = '4Kp60'
 }
+
+export enum FilesystemFormat {
+	exFAT = 'exFAT',
+	HFS = 'HFS+'
+}

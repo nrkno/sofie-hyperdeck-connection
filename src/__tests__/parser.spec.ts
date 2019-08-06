@@ -89,4 +89,20 @@ describe('Parser', () => {
 		expect(parser.receivedString('\r\n200 ok\r\n200ok\r\n200 ok\r\n')).toHaveLength(2)
 	})
 
+	test('Parser: Format Command', async () => {
+		const rawLines = '216 format ready\r\ntgf66k'
+
+		const parser = new MultilineParser(false, () => null)
+		const res = parser.receivedString(rawLines)
+		expect(res[0]).toBeTruthy()
+
+		if (res[0]) {
+			expect(res[0].code).toEqual(216)
+			expect(res[0].name).toEqual('format ready')
+			expect(res[0].params).toEqual({
+				code: 'tgf66k'
+			})
+		}
+	})
+
 })

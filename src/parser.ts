@@ -1,5 +1,6 @@
 import * as _ from 'underscore'
 import { ResponseMessage, NamedMessage } from './message'
+import { SynchronousCode } from './codes'
 
 export function buildMessageStr (msg: NamedMessage) {
 	if (_.isEmpty(msg.params)) {
@@ -45,7 +46,12 @@ export class MultilineParser {
 			// if the first line has no colon, then it is a single line command
 			if (this._linesQueue[0].indexOf(':') === -1) {
 				const r = this.parseResponse(this._linesQueue.splice(0, 1))
-				if (r) res.push(r)
+				if (r) {
+					res.push(r)
+					if (r.code === SynchronousCode.FormatReady) { // edge case, where response has no header:
+						r.params['code'] = this._linesQueue.shift()!
+					}
+				}
 				continue
 			}
 
