@@ -50,3 +50,14 @@ export class PingCommand extends AbstractCommandNoResponse {
 		return res
 	}
 }
+
+export class QuitCommand extends AbstractCommandNoResponse {
+	serialize () {
+		const res: NamedMessage = {
+			name: 'quit',
+			params: {}
+		}
+
+		return res
+	}
+}
