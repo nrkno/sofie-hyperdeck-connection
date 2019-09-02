@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.2.0...0.3.0) (2019-09-02)
+
+
+### Features
+
+* quit command before closing connection ([ece4982](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/ece4982))
+
+
+
 <a name="0.2.0"></a>
 # [0.2.0](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.1.5...0.2.0) (2019-08-06)
 
