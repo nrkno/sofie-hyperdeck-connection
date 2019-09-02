@@ -5,7 +5,7 @@ import { ResponseCodeType, GetResponseCodeType, AsynchronousCode } from './codes
 import { AbstractCommand, ErrorResponse } from './commands'
 import * as AsyncHandlers from './asyncHandlers'
 import { ResponseMessage } from './message'
-import { DummyConnectCommand, WatchdogPeriodCommand, PingCommand } from './commands/internal'
+import { DummyConnectCommand, WatchdogPeriodCommand, PingCommand, QuitCommand } from './commands/internal'
 import { buildMessageStr, MultilineParser } from './parser'
 
 export interface HyperdeckOptions {
@@ -110,8 +110,9 @@ export class Hyperdeck extends EventEmitter {
 
 		if (!this._connected) return Promise.resolve()
 
-		return new Promise((resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
+				await this.sendCommand(new QuitCommand())
 				this.socket.end()
 				return resolve()
 			} catch (e) {
