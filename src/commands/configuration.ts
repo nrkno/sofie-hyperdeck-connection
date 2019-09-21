@@ -1,6 +1,6 @@
 import { SynchronousCode } from '../codes'
 import { ResponseMessage, NamedMessage } from '../message'
-import { AbstractCommand } from './abstractCommand'
+import { AbstractCommand, AbstractCommandNoResponse } from './abstractCommand'
 
 export interface ConfigurationCommandResponse {
 	videoInput: string
@@ -8,12 +8,8 @@ export interface ConfigurationCommandResponse {
 	fileFormat: string
 }
 
-export class ConfigurationCommand extends AbstractCommand {
+export class ConfigurationGetCommand extends AbstractCommand {
 	expectedResponseCode = SynchronousCode.DeviceInfo
-
-	videoInput?: string
-	audioInput?: string
-	fileFormat?: string
 
 	deserialize (msg: ResponseMessage) {
 		const res: ConfigurationCommandResponse = {
@@ -23,6 +19,21 @@ export class ConfigurationCommand extends AbstractCommand {
 		}
 		return res
 	}
+
+	serialize () {
+		const res: NamedMessage = {
+			name: 'configuration',
+			params: {}
+		}
+
+		return res
+	}
+}
+
+export class ConfigurationCommand extends AbstractCommandNoResponse {
+	videoInput?: string
+	audioInput?: string
+	fileFormat?: string
 
 	constructor (videoInput?: string, audioInput?: string, fileFormat?: string) {
 		super()
@@ -34,7 +45,7 @@ export class ConfigurationCommand extends AbstractCommand {
 
 	serialize () {
 		const res: NamedMessage = {
-			name: 'jog',
+			name: 'configuration',
 			params: {}
 		}
 
