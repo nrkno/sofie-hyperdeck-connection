@@ -1,6 +1,7 @@
 export { AbstractCommand, ErrorResponse } from './abstractCommand'
 
 export * from './connect'
+export * from './configuration'
 export * from './deviceInfo'
 export * from './format'
 export * from './notify'
