@@ -1,7 +1,7 @@
 import { NamedMessage } from '../message'
 import { AbstractCommandNoResponse } from './abstractCommand'
 
-export class SpeedCommand extends AbstractCommandNoResponse {
+export class ShuttleCommand extends AbstractCommandNoResponse {
 	speed?: number
 
 	constructor (speed?: number) {
