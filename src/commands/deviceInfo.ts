@@ -5,7 +5,7 @@ import { AbstractCommand } from './abstractCommand'
 export interface DeviceInfoCommandResponse {
 	protocolVersion: number
 	model: string
-	uniqueId: string
+	slots: string
 }
 
 export class DeviceInfoCommand extends AbstractCommand {
@@ -15,7 +15,7 @@ export class DeviceInfoCommand extends AbstractCommand {
 		const res: DeviceInfoCommandResponse = {
 			protocolVersion: parseFloat(msg.params['protocol version']),
 			model: msg.params['model'],
-			uniqueId: msg.params['unique id']
+			slots: msg.params['slot count']
 		}
 		return res
 	}
