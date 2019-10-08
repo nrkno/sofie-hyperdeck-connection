@@ -915,6 +915,9 @@ img { max-width: 100%; }
 				<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
 					<a href="recordcommand.html#constructor" class="tsd-kind-icon">constructor</a>
 				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-external">
+					<a href="recordcommand.html#append" class="tsd-kind-icon">append</a>
+				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
 					<a href="recordcommand.html#expectedresponsecode" class="tsd-kind-icon">expected<wbr>Response<wbr>Code</a>
 				</li>
@@ -959,6 +962,7 @@ img { max-width: 100%; }
 					<section class="tsd-index-section tsd-is-external">
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="recordcommand.html#append" class="tsd-kind-icon">append</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external"><a href="recordcommand.html#expectedresponsecode" class="tsd-kind-icon">expected<wbr>Response<wbr>Code</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-external"><a href="recordcommand.html#filename" class="tsd-kind-icon">filename</a></li>
 						</ul>
@@ -979,19 +983,22 @@ img { max-width: 100%; }
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
 				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-external">
-					<li class="tsd-signature tsd-kind-icon">new <wbr>Record<wbr>Command<span class="tsd-signature-symbol">(</span>filename<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="recordcommand.html" class="tsd-signature-type">RecordCommand</a></li>
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Record<wbr>Command<span class="tsd-signature-symbol">(</span>filename<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, append<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="recordcommand.html" class="tsd-signature-type">RecordCommand</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/nrkno/tv-automation-hyperdeck-connection/blob/6ee7059/src/commands/record.ts#L5">commands/record.ts:5</a></li>
+								<li>Defined in <a href="https://github.com/nrkno/tv-automation-hyperdeck-connection/blob/d72c115/src/commands/record.ts#L6">commands/record.ts:6</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5><span class="tsd-flag ts-flagOptional">Optional</span> filename: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> append: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="recordcommand.html" class="tsd-signature-type">RecordCommand</a></h4>
@@ -1001,6 +1008,16 @@ img { max-width: 100%; }
 		</section>
 		<section class="tsd-panel-group tsd-member-group tsd-is-external">
 			<h2>Properties</h2>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-external">
+				<a name="append" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> append</h3>
+				<div class="tsd-signature tsd-kind-icon">append<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/nrkno/tv-automation-hyperdeck-connection/blob/d72c115/src/commands/record.ts#L6">commands/record.ts:6</a></li>
+					</ul>
+				</aside>
+			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited tsd-is-external">
 				<a name="expectedresponsecode" class="tsd-anchor"></a>
 				<h3>expected<wbr>Response<wbr>Code</h3>
@@ -1009,7 +1026,7 @@ img { max-width: 100%; }
 					<p>Inherited from <a href="abstractcommandnoresponse.html">AbstractCommandNoResponse</a>.<a href="abstractcommandnoresponse.html#expectedresponsecode">expectedResponseCode</a></p>
 					<p>Overrides <a href="abstractcommand.html">AbstractCommand</a>.<a href="abstractcommand.html#expectedresponsecode">expectedResponseCode</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/nrkno/tv-automation-hyperdeck-connection/blob/6ee7059/src/commands/abstractCommand.ts#L15">commands/abstractCommand.ts:15</a></li>
+						<li>Defined in <a href="https://github.com/nrkno/tv-automation-hyperdeck-connection/blob/d72c115/src/commands/abstractCommand.ts#L15">commands/abstractCommand.ts:15</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1019,7 +1036,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">filename<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/nrkno/tv-automation-hyperdeck-connection/blob/6ee7059/src/commands/record.ts#L5">commands/record.ts:5</a></li>
+						<li>Defined in <a href="https://github.com/nrkno/tv-automation-hyperdeck-connection/blob/d72c115/src/commands/record.ts#L5">commands/record.ts:5</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1038,7 +1055,7 @@ img { max-width: 100%; }
 							<p>Inherited from <a href="abstractcommandnoresponse.html">AbstractCommandNoResponse</a>.<a href="abstractcommandnoresponse.html#deserialize">deserialize</a></p>
 							<p>Overrides <a href="abstractcommand.html">AbstractCommand</a>.<a href="abstractcommand.html#deserialize">deserialize</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/nrkno/tv-automation-hyperdeck-connection/blob/6ee7059/src/commands/abstractCommand.ts#L17">commands/abstractCommand.ts:17</a></li>
+								<li>Defined in <a href="https://github.com/nrkno/tv-automation-hyperdeck-connection/blob/d72c115/src/commands/abstractCommand.ts#L17">commands/abstractCommand.ts:17</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1062,7 +1079,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Overrides <a href="abstractcommand.html">AbstractCommand</a>.<a href="abstractcommand.html#serialize">serialize</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/nrkno/tv-automation-hyperdeck-connection/blob/6ee7059/src/commands/record.ts#L13">commands/record.ts:13</a></li>
+								<li>Defined in <a href="https://github.com/nrkno/tv-automation-hyperdeck-connection/blob/d72c115/src/commands/record.ts#L15">commands/record.ts:15</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-returns-title">Returns <a href="../interfaces/namedmessage.html" class="tsd-signature-type">NamedMessage</a></h4>
