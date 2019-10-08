@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.4.0"></a>
+# [0.4.0](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.3.0...0.4.0) (2019-10-08)
+
+
+### Bug Fixes
+
+* Configuration Command ([ab5bf19](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/ab5bf19))
+* Device Info carries slot count and not unique id ([0a8a09e](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/0a8a09e))
+* export shuttle command ([ed33dc5](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/ed33dc5))
+
+
+### Features
+
+* configuration command ([e7c47d4](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/e7c47d4))
+* goto command ([bc05045](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/bc05045))
+* jog command ([cbcd0cf](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/cbcd0cf))
+* play command ([14bb340](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/14bb340))
+* remote command ([7d8b254](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/7d8b254))
+* shuttle command ([b412641](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/b412641))
+
+
+
 <a name="0.3.0"></a>
 # [0.3.0](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.2.0...0.3.0) (2019-09-02)
 
