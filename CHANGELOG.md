@@ -1,6 +1,18 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [0.4.1](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.4.0...0.4.1) (2019-12-11)
+
+
+### Features
+
+* update ci to run for node 8,10,12 ([9ae081a](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/9ae081a906129447b9bbc3f5a6556a27fe068c3b))
+
+
+### Bug Fixes
+
+* goTo command ([aa40de8](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/aa40de8bd9dbbc82cf0d1a8404df0fe9f9063f5d))
 
 <a name="0.4.0"></a>
 # [0.4.0](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.3.0...0.4.0) (2019-10-08)
