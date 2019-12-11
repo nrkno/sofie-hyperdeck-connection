@@ -21,7 +21,7 @@ export class GoToCommand extends AbstractCommandNoResponse {
 		}
 
 		if (this.clip !== undefined) res.params.clip = this.clip
-		if (this.clipId !== undefined) res.params.clipId = this.clipId + ''
+		if (this.clipId !== undefined) res.params['clip id'] = this.clipId + ''
 		if (this.timecode !== undefined) res.params.timecode = this.timecode
 
 		if (Object.keys(res.params).length === 0) {
