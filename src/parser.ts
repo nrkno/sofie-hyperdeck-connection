@@ -87,6 +87,10 @@ export class MultilineParser {
 			const lineMatch = lines[i].match(/^(.*?): (.*)$/im)
 			if (!lineMatch) {
 				if (this._debug) this._log('failed to parse line', lines[i])
+				// edge case for format command:
+				if (code === SynchronousCode.FormatReady && lines[i] !== '') {
+					params['code'] = lines[i]
+				}
 				continue
 			}
 
