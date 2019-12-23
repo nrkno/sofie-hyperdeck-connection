@@ -116,7 +116,8 @@
   ],
   "dependencies": {
     "underscore": "^1.9.1",
-    "underscore-deep-extend": "^1.1.5"
+    "underscore-deep-extend": "^1.1.5",
+    "tslib": "^1.9.0"
   },
   "standard-version": {
     "message": "chore(release): %s [skip ci]",
