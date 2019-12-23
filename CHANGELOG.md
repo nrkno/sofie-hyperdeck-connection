@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.2](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.4.1...0.4.2) (2019-12-23)
+
+
+### Bug Fixes
+
+* FormatCommand response has a colon on newer firmware versions ([5aa9071](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/5aa9071fafb6493e7e664743dc680499a9d2d205))
+
 ### [0.4.1](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.4.0...0.4.1) (2019-12-11)
 
 
