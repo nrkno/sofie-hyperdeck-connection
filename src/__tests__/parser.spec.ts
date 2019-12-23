@@ -105,7 +105,6 @@ describe('Parser', () => {
 		}
 	})
 
-
 	test('Parser: Format Command (new)', async () => {
 		const rawLines = ['216 format ready:', 'tgf66k']
 
