@@ -105,4 +105,21 @@ describe('Parser', () => {
 		}
 	})
 
+
+	test('Parser: Format Command (new)', async () => {
+		const rawLines = ['216 format ready:', 'tgf66k']
+
+		const parser = new MultilineParser(false, () => null)
+		const res = parser.parseResponse(rawLines)
+		expect(res).toBeTruthy()
+
+		if (res) {
+			expect(res.code).toEqual(216)
+			expect(res.name).toEqual('format ready')
+			expect(res.params).toEqual({
+				code: 'tgf66k'
+			})
+		}
+	})
+
 })
