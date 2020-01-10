@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.3](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.4.2...0.4.3) (2020-01-10)
+
 ### [0.4.2](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.4.1...0.4.2) (2019-12-23)
 
 
