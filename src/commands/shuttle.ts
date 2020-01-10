@@ -12,7 +12,7 @@ export class ShuttleCommand extends AbstractCommandNoResponse {
 
 	serialize () {
 		const res: NamedMessage = {
-			name: 'speed',
+			name: 'shuttle',
 			params: {}
 		}
 
