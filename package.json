@@ -47,7 +47,8 @@
     "changelog": "standard-version",
     "release": "yarn reset && yarn test && yarn docs:publish && yarn changelog",
     "reset": "git clean -dfx && git reset --hard && yarn",
-    "validate:dependencies": "yarn audit && yarn license-validate",
+    "validate:dependencies": "yarn audit --groups dependencies && yarn license-validate",
+    "validate:dev-dependencies": "yarn audit --groups devDependencies",
     "license-validate": "node-license-validator -p -d --allow-licenses MIT BSD BSD-3-Clause ISC Apache Unlicense --allow-packages cycle"
   },
   "scripts-info": {
@@ -115,9 +116,9 @@
     "source"
   ],
   "dependencies": {
+    "tslib": "^1.9.0",
     "underscore": "^1.9.1",
-    "underscore-deep-extend": "^1.1.5",
-    "tslib": "^1.9.0"
+    "underscore-deep-extend": "^1.1.5"
   },
   "standard-version": {
     "message": "chore(release): %s [skip ci]",
