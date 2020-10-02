@@ -26,6 +26,7 @@ export enum SynchronousCode {
 	OK = 200,
 	SlotInfo = 202,
 	DeviceInfo = 204,
+	DiskList = 206,
 	TransportInfo = 208,
 	Notify = 209,
 	FormatReady = 216
