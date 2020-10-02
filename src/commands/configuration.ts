@@ -49,9 +49,9 @@ export class ConfigurationCommand extends AbstractCommandNoResponse {
 			params: {}
 		}
 
-		if (this.videoInput) res.params.videoInput = this.videoInput
-		if (this.audioInput) res.params.audioInput = this.audioInput
-		if (this.fileFormat) res.params.fileFormat = this.fileFormat
+		if (this.videoInput) res.params.videoInput = 'video input: ' + this.videoInput
+		if (this.audioInput) res.params.audioInput = 'audio input: ' + this.audioInput
+		if (this.fileFormat) res.params.fileFormat = 'file format: ' + this.fileFormat
 
 		return res
 	}
