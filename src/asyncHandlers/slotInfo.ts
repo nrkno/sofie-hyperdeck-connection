@@ -16,13 +16,13 @@ export class SlotInfoChange implements IHandler {
 	responseCode = AsynchronousCode.SlotInfo
 	eventName = 'notify.slot'
 
-	deserialize (msg: ResponseMessage) {
+	deserialize(msg: ResponseMessage): SlotInfoChangeResponse {
 		const res: SlotInfoChangeResponse = {
 			slotId: parseInt(msg.params['slot id'], 10),
 			status: msg.params['status'] as SlotStatus,
 			volumeName: msg.params['volume name'],
 			recordingTime: parseIntIfDefined(msg.params['recording time']),
-			videoFormat: msg.params['video format'] as VideoFormat
+			videoFormat: msg.params['video format'] as VideoFormat,
 		}
 		return res
 	}

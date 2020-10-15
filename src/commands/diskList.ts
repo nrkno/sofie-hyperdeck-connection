@@ -4,7 +4,7 @@ import { NamedMessage, ResponseMessage } from '../message'
 import { AbstractCommand } from './abstractCommand'
 
 export interface Clip {
-	clipId: string,
+	clipId: string
 	name: string
 }
 
@@ -17,18 +17,18 @@ export class DiskListCommand extends AbstractCommand {
 	expectedResponseCode = SynchronousCode.DiskList
 	slot?: string
 
-	constructor (slot?: string) {
+	constructor(slot?: string) {
 		super()
 
 		this.slot = slot
 	}
 
-	deserialize (msg: ResponseMessage) {
-		const clipIds = Object.keys(msg.params).filter(x => x !== 'slot id')
-		const clips = clipIds.map(x => {
+	deserialize(msg: ResponseMessage): DiskListCommandResponse {
+		const clipIds = Object.keys(msg.params).filter((x) => x !== 'slot id')
+		const clips = clipIds.map((x) => {
 			const clip: Clip = {
 				clipId: x,
-				name: msg.params[x]
+				name: msg.params[x],
 			}
 
 			return clip
@@ -36,16 +36,16 @@ export class DiskListCommand extends AbstractCommand {
 
 		const res: DiskListCommandResponse = {
 			slotId: parseInt(msg.params['slot id'], 10),
-			clips
+			clips,
 		}
 
 		return res
 	}
 
-	serialize (): NamedMessage | null {
+	serialize(): NamedMessage | null {
 		const res: NamedMessage = {
 			name: 'disk list',
-			params: {}
+			params: {},
 		}
 
 		if (this.slot !== undefined) res.params['slot id'] = this.slot

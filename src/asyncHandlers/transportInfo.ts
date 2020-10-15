@@ -20,7 +20,7 @@ export class TransportInfoChange implements IHandler {
 	responseCode = AsynchronousCode.TransportInfo
 	eventName = 'notify.transport'
 
-	deserialize (msg: ResponseMessage) {
+	deserialize(msg: ResponseMessage): TransportInfoChangeResponse {
 		const res: TransportInfoChangeResponse = {
 			status: msg.params['status'] as TransportStatus,
 			speed: parseIntIfDefined(msg.params['speed']),
@@ -30,7 +30,7 @@ export class TransportInfoChange implements IHandler {
 			displayTimecode: msg.params['display timecode'],
 			timecode: msg.params['timecode'],
 			videoFormat: msg.params['video format'] as VideoFormat,
-			loop: parseBool(msg.params['loop'])
+			loop: parseBool(msg.params['loop']),
 		}
 		return res
 	}

@@ -12,16 +12,16 @@ export class FormatCommand extends AbstractCommand {
 
 	filesystem?: FilesystemFormat
 
-	deserialize (msg: ResponseMessage): FormatCommandResponse {
+	deserialize(msg: ResponseMessage): FormatCommandResponse {
 		return {
-			code: msg.params.code
+			code: msg.params.code,
 		}
 	}
 
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'format',
-			params: {}
+			params: {},
 		}
 
 		if (this.filesystem) {
@@ -35,10 +35,10 @@ export class FormatCommand extends AbstractCommand {
 export class FormatConfirmCommand extends AbstractCommandNoResponse {
 	code?: string
 
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'format',
-			params: {}
+			params: {},
 		}
 
 		if (this.code) {

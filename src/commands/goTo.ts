@@ -6,7 +6,7 @@ export class GoToCommand extends AbstractCommandNoResponse {
 	clipId?: number
 	timecode?: string
 
-	constructor (clip?: string, clipId?: number, timecode?: string) {
+	constructor(clip?: string, clipId?: number, timecode?: string) {
 		super()
 
 		this.clip = clip
@@ -14,10 +14,10 @@ export class GoToCommand extends AbstractCommandNoResponse {
 		this.timecode = timecode
 	}
 
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'goto',
-			params: {}
+			params: {},
 		}
 
 		if (this.clip !== undefined) res.params.clip = this.clip

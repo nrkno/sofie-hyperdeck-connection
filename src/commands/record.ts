@@ -5,17 +5,17 @@ export class RecordCommand extends AbstractCommandNoResponse {
 	filename?: string
 	append?: boolean
 
-	constructor (filename?: string, append?: boolean) {
+	constructor(filename?: string, append?: boolean) {
 		super()
 
 		this.filename = filename
 		this.append = append
 	}
 
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'record',
-			params: {}
+			params: {},
 		}
 
 		if (this.filename) res.params.name = this.filename

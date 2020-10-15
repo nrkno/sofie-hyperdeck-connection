@@ -2,11 +2,10 @@ import { MultilineParser, buildMessageStr } from '../parser'
 import { NamedMessage } from '../message'
 
 describe('Parser', () => {
-
 	test('Parser: response single line', async () => {
 		const msg: NamedMessage = {
 			name: 'some phrase',
-			params: {}
+			params: {},
 		}
 
 		const str = buildMessageStr(msg)
@@ -17,8 +16,8 @@ describe('Parser', () => {
 		const msg: NamedMessage = {
 			name: 'some phrase',
 			params: {
-				'item one': 'val 1'
-			}
+				'item one': 'val 1',
+			},
 		}
 
 		const str = buildMessageStr(msg)
@@ -53,7 +52,7 @@ describe('Parser', () => {
 			'prop1: val',
 			'item2: val2',
 			'spaced key: spaced out val',
-			'broken line to be ignored'
+			'broken line to be ignored',
 		]
 
 		const parser = new MultilineParser(false, () => null)
@@ -66,7 +65,7 @@ describe('Parser', () => {
 			expect(res.params).toEqual({
 				prop1: 'val',
 				item2: 'val2',
-				'spaced key': 'spaced out val'
+				'spaced key': 'spaced out val',
 			})
 		}
 	})
@@ -100,7 +99,7 @@ describe('Parser', () => {
 			expect(res[0].code).toEqual(216)
 			expect(res[0].name).toEqual('format ready')
 			expect(res[0].params).toEqual({
-				code: 'tgf66k'
+				code: 'tgf66k',
 			})
 		}
 	})
@@ -116,9 +115,8 @@ describe('Parser', () => {
 			expect(res.code).toEqual(216)
 			expect(res.name).toEqual('format ready')
 			expect(res.params).toEqual({
-				code: 'tgf66k'
+				code: 'tgf66k',
 			})
 		}
 	})
-
 })
