@@ -87,6 +87,7 @@
     "@sofietv/code-standard-preset": "file:../sofie-code-standard-preset",
     "@types/jest": "^24.0.21",
     "@types/node": "^12.12.5",
+    "@types/underscore": "^1.10.24",
     "codecov": "^3.1.0",
     "eslint": "7",
     "gh-pages": "^2.1.1",
