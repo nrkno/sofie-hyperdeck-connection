@@ -1,6 +1,4 @@
 {
-	"extends": "./config/tsconfig.base",
-	"exclude": [
-		"node_modules/**"
-	]
+	"extends": "@sofietv/code-standard-preset/ts/tsconfig.lib",
+	"exclude": ["node_modules/**"]
 }
