@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'
 import { Socket } from 'net'
 
 import { ResponseCodeType, GetResponseCodeType, AsynchronousCode } from './codes'
-import { AbstractCommand, ErrorResponse } from './commands'
+import { AbstractCommand } from './commands'
 import * as AsyncHandlers from './asyncHandlers'
 import { ResponseMessage } from './message'
 import { DummyConnectCommand, WatchdogPeriodCommand, PingCommand, QuitCommand } from './commands/internal'
@@ -18,9 +18,6 @@ class QueuedCommand {
 	public readonly promise: Promise<any>
 	public readonly command: AbstractCommand
 
-	public resolve: (res: any) => void
-	public reject: (res: ErrorResponse) => void
-
 	constructor(command: AbstractCommand) {
 		this.command = command
 		this.promise = new Promise((resolve, reject) => {
@@ -28,6 +25,9 @@ class QueuedCommand {
 			this.reject = reject
 		})
 	}
+
+	resolve(_res: any) {}
+	reject(_res: any) {}
 }
 
 export class Hyperdeck extends EventEmitter {
@@ -35,7 +35,6 @@ export class Hyperdeck extends EventEmitter {
 	RECONNECT_INTERVAL = 5000
 	DEBUG = false
 
-	event: EventEmitter
 	private socket: Socket
 	private _connected = false
 	private _retryConnectTimeout: NodeJS.Timer | null = null
@@ -48,8 +47,8 @@ export class Hyperdeck extends EventEmitter {
 	private _parser: MultilineParser
 
 	private _connectionActive = false // True when connected/connecting/reconnecting
-	private _host: string
-	private _port: number
+	private _host: string = ''
+	private _port: number = this.DEFAULT_PORT
 
 	constructor(options?: HyperdeckOptions) {
 		super()
