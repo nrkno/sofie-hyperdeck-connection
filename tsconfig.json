@@ -1,4 +1,4 @@
 {
-	"extends": "@sofietv/code-standard-preset/ts/tsconfig.lib",
+	"extends": "@sofie-automation/code-standard-preset/ts/tsconfig.lib",
 	"exclude": ["node_modules/**"]
 }

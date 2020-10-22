@@ -84,7 +84,7 @@
     "/LICENSE"
   ],
   "devDependencies": {
-    "@sofietv/code-standard-preset": "file:../sofie-code-standard-preset",
+    "@sofie-automation/code-standard-preset": "0.1.1-nightly-20201019-102528-72a1296.0",
     "@types/jest": "^24.0.21",
     "@types/node": "^12.12.5",
     "@types/underscore": "^1.10.24",
@@ -127,7 +127,7 @@
     "message": "chore(release): %s [skip ci]",
     "tagPrefix": ""
   },
-  "prettier": "@sofietv/code-standard-preset/.prettierrc.json",
+  "prettier": "@sofie-automation/code-standard-preset/.prettierrc.json",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
