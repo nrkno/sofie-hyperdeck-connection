@@ -74,7 +74,7 @@ describe('Hyperdeck', () => {
 		const onDisconnection = jest.fn()
 		const onSocketWrite = jest.fn()
 
-		let thisSocket
+		let thisSocket: any
 		// @ts-ignore MockSocket
 		MockSocket.mockOnNextSocket((socket: any) => {
 			onSocketCreate(onSocketCreate)
@@ -104,7 +104,7 @@ describe('Hyperdeck', () => {
 		expect(onConnection).toHaveBeenCalledTimes(1)
 		expect(onDisconnection).toHaveBeenCalledTimes(0)
 
-		thisSocket.end()
+		thisSocket?.end()
 		await waitALittleBit()
 
 		expect(hp.connected).toBeFalsy()
@@ -294,7 +294,7 @@ describe('Hyperdeck', () => {
 		const onConnection = jest.fn()
 		const onSocketWrite = jest.fn()
 
-		let thisSocket
+		let thisSocket: any
 		// @ts-ignore MockSocket
 		MockSocket.mockOnNextSocket((socket: any) => {
 			onSocketCreate(onSocketCreate)
@@ -338,7 +338,7 @@ describe('Hyperdeck', () => {
 		const onConnection = jest.fn()
 		const onSocketWrite = jest.fn()
 
-		let thisSocket
+		let thisSocket: any
 		// @ts-ignore MockSocket
 		MockSocket.mockOnNextSocket((socket: any) => {
 			onSocketCreate(onSocketCreate)

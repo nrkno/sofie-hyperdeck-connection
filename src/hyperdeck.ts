@@ -26,8 +26,12 @@ class QueuedCommand {
 		})
 	}
 
-	resolve(_res: any) {}
-	reject(_res: any) {}
+	resolve(_res: any) {
+		//
+	}
+	reject(_res: any) {
+		//
+	}
 }
 
 export class Hyperdeck extends EventEmitter {
@@ -47,8 +51,8 @@ export class Hyperdeck extends EventEmitter {
 	private _parser: MultilineParser
 
 	private _connectionActive = false // True when connected/connecting/reconnecting
-	private _host: string = ''
-	private _port: number = this.DEFAULT_PORT
+	private _host = ''
+	private _port = this.DEFAULT_PORT
 
 	constructor(options?: HyperdeckOptions) {
 		super()

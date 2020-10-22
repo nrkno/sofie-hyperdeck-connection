@@ -5,9 +5,9 @@ const sockets: Array<Socket> = []
 const onNextSocket: Array<Function> = []
 
 export class Socket extends EventEmitter {
-	public onWrite: (buff: Buffer, encoding: string) => void
-	public onConnect: (port: number, host: string) => void
-	public onClose: () => void
+	public onWrite: ((buff: Buffer, encoding: string) => void) | undefined
+	public onConnect: ((port: number, host: string) => void) | undefined
+	public onClose: (() => void) | undefined
 
 	public expectedWrites: { call: string; response: string }[] = []
 
