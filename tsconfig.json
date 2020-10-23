@@ -1,16 +1,10 @@
 {
-	"extends": "@sofie-automation/code-standard-preset/ts/tsconfig.lib",
+	"extends": "./tsconfig.build",
 	"exclude": ["node_modules/**"],
 	"compilerOptions": {
 		"types": [
 			"node",
 			"jest"
-		],
-		"baseUrl": "./",
-		"paths": {
-			"*": ["./node_modules/*", "./src/types/*"],
-			"hyperdeck-connection": ["./src/index.ts"],
-			"types": ["node", "jest"]
-		}
+		]
 	}
 }
