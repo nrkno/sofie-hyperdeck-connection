@@ -27,10 +27,10 @@ class QueuedCommand {
 	}
 
 	resolve(_res: any) {
-		//
+		throw new Error('No promise to resolve')
 	}
 	reject(_res: any) {
-		//
+		throw new Error('No promise to reject')
 	}
 }
 
