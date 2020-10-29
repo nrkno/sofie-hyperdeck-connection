@@ -103,7 +103,9 @@
     "typescript": "~3.6.0"
   },
   "resolutions": {
-    "typedoc/marked": "^0.7.0"
+    "minimist": "^1.2.3",
+    "yargs-parser": "^18.1.2",
+    "compare-func": "2.0.0"
   },
   "keywords": [
     "blackmagic",
