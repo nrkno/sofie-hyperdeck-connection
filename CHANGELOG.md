@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.4](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.4.3...0.4.4) (2020-10-29)
+
+
+### Features
+
+* **ci:** prereleases flow & optional audit skip [skip ci] ([37b48a4](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/37b48a4bac0b315ea074a3463cf33a9fbbc2fdc1))
+* **ci:** prereleases flow & optional audit skip [skip ci] ([37b48a4](https://github.com/nrkno/tv-automation-hyperdeck-connection/commit/37b48a4bac0b315ea074a3463cf33a9fbbc2fdc1))
+
 ### [0.4.3](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.4.2...0.4.3) (2020-01-10)
 
 ### [0.4.2](https://github.com/nrkno/tv-automation-hyperdeck-connection/compare/0.4.1...0.4.2) (2019-12-23)
