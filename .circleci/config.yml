@@ -15,7 +15,7 @@ jobs:
       - save_cache:
           key: yarn-cache-8-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths: [node_modules]
-      - run: yarn test
+      - run: yarn unit # Skip linting because eslint is not node 8 compatible
 
   test-node-10:
     docker:
@@ -117,7 +117,7 @@ jobs:
           at: ~/project
       - add_ssh_keys:
           fingerprints:
-            - "76:a4:ac:1c:ba:8c:57:f1:4c:66:1b:85:fe:44:64:52"
+            - '76:a4:ac:1c:ba:8c:57:f1:4c:66:1b:85:fe:44:64:52'
       - run: mkdir -p ~/.ssh
       - run:
           name: Keyscan Github
