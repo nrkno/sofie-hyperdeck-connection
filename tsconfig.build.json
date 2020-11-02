@@ -2,12 +2,13 @@
 	"extends": "@sofie-automation/code-standard-preset/ts/tsconfig.lib",
 	"exclude": ["node_modules/**", "src/**/*spec.ts", "src/**/__tests__/*", "src/**/__mocks__/*"],
 	"compilerOptions": {
+		"target": "es6",
+		"lib": ["es6"],
 		"outDir": "./dist",
 		"baseUrl": "./",
 		"paths": {
-			"*": ["./node_modules/*", "./src/types/*"],
-			"hyperdeck-connection": ["./src/index.ts"],
-			"types": ["node", "jest"]
+			"*": ["./node_modules/*"],
+			"hyperdeck-connection": ["./src/index.ts"]
 		}
 	}
 }
