@@ -1,22 +1,5 @@
 version: 2
 jobs:
-  test-node-8:
-    docker:
-      - image: circleci/node:8
-    working_directory: ~/project
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - yarn-cache-8-{{ .Branch }}-{{ checksum "yarn.lock" }}
-            - yarn-cache-8-{{ .Branch }}
-            - yarn-cache-8-
-      - run: yarn install --ignore-engines
-      - save_cache:
-          key: yarn-cache-8-{{ .Branch }}-{{ checksum "yarn.lock" }}
-          paths: [node_modules]
-      - run: yarn unit # Skip linting because eslint is not node 8 compatible
-
   test-node-10:
     docker:
       - image: circleci/node:10
@@ -208,7 +191,6 @@ workflows:
     jobs:
       - test-latest(node-12)
       - test-node-10
-      - test-node-8
       - validate-all-dependencies:
           filters:
             branches:
@@ -225,7 +207,6 @@ workflows:
             - validate-dependencies
             - test-latest(node-12)
             - test-node-10
-            - test-node-8
           filters:
             branches:
               only:
@@ -234,7 +215,6 @@ workflows:
           requires:
             - test-latest(node-12)
             - test-node-10
-            - test-node-8
           filters:
             tags:
               ignore: /.*/
