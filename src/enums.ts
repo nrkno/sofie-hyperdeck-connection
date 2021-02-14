@@ -51,3 +51,17 @@ export enum FilesystemFormat {
 	exFAT = 'exFAT',
 	HFS = 'HFS+',
 }
+
+export enum DynamicRange {
+	Off = 'off',
+	Rec709 = 'Rec709',
+	Rec2020_SDR = 'Rec2020_SDR',
+	HLG = 'HLG',
+	ST2084_300 = 'ST2084_300',
+	ST2084_500 = 'ST2084_500',
+	ST2084_800 = 'ST2084_800',
+	ST2084_1000 = 'ST2084_1000',
+	ST2084_2000 = 'ST2084_2000',
+	ST2084_4000 = 'ST2084_4000',
+	ST2048 = 'ST2048',
+}
