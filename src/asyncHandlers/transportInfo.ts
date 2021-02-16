@@ -32,6 +32,12 @@ export class TransportInfoChange implements IHandler {
 			videoFormat: msg.params['video format'] as VideoFormat,
 			loop: parseBool(msg.params['loop']),
 		}
+
+		if (msg.params['active slot'] && !res.slotId) {
+			// this is essentially off-spec but seems to be how BMD have implemented it
+			res.slotId = parseIdOrNone(msg.params['active slot'])
+		}
+
 		return res
 	}
 }
