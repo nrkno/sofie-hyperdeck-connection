@@ -22,3 +22,22 @@ export class SlotSelectCommand extends AbstractCommandNoResponse {
 		return res
 	}
 }
+
+export class SlotUnblockCommand extends AbstractCommandNoResponse {
+	constructor(public slotId: string) {
+		super()
+	}
+
+	serialize(): NamedMessage {
+		const res: NamedMessage = {
+			name: 'slot unblock',
+			params: {},
+		}
+
+		if (this.slotId) {
+			res.params['slot id'] = this.slotId
+		}
+
+		return res
+	}
+}
