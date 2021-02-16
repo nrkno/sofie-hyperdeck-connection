@@ -2,7 +2,7 @@ import { SynchronousCode } from '../codes'
 import { NamedMessage, ResponseMessage } from '../message'
 import { AbstractCommand, AbstractCommandNoResponse } from './abstractCommand'
 
-export interface Clip {
+export interface ClipInfo {
 	clipId: string
 	name: string
 	startTime: string
@@ -12,7 +12,7 @@ export interface Clip {
 }
 export interface ClipsGetCommandResponse {
 	clipCount: number
-	clips: Clip[]
+	clips: ClipInfo[]
 }
 
 export class ClipsGetCommand extends AbstractCommand {
@@ -24,7 +24,7 @@ export class ClipsGetCommand extends AbstractCommand {
 
 	deserialize(msg: ResponseMessage): ClipsGetCommandResponse {
 		const clipIds = Object.keys(msg.params).filter((x) => x !== 'clip count')
-		const clips = clipIds.map<Clip>((x) => {
+		const clips = clipIds.map<ClipInfo>((x) => {
 			if (this.version === 2) {
 				return {
 					clipId: x,

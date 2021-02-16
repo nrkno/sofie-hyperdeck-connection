@@ -1,7 +1,7 @@
 import { AbstractCommandNoResponse } from './abstractCommand'
 import { NamedMessage } from '../message'
 
-export class FormatConfirmCommand extends AbstractCommandNoResponse {
+export class IdentifyCommand extends AbstractCommandNoResponse {
 	constructor(public enable: boolean) {
 		super()
 	}
