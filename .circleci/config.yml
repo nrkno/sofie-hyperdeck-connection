@@ -159,7 +159,7 @@ jobs:
             fi
       - add_ssh_keys:
           fingerprints:
-            - 'bc:e3:2c:af:66:45:20:4a:f7:19:e1:3c:15:b0:f7:88'
+            - '76:a4:ac:1c:ba:8c:57:f1:4c:66:1b:85:fe:44:64:52'
       - run: mkdir -p ~/.ssh
       - run:
           name: Keyscan Github
