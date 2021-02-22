@@ -4,16 +4,16 @@ import { AbstractCommandNoResponse } from './abstractCommand'
 export class ShuttleCommand extends AbstractCommandNoResponse {
 	speed?: number
 
-	constructor (speed?: number) {
+	constructor(speed?: number) {
 		super()
 
 		this.speed = speed
 	}
 
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'shuttle',
-			params: {}
+			params: {},
 		}
 
 		if (this.speed) res.params.speed = this.speed + ''

@@ -5,5 +5,5 @@ export interface IHandler {
 	responseCode: AsynchronousCode
 	eventName: string
 
-	deserialize (msg: ResponseMessage): any
+	deserialize(msg: ResponseMessage): any
 }

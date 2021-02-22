@@ -4,10 +4,10 @@ import { NamedMessage } from '../message'
 export class SlotSelectCommand extends AbstractCommandNoResponse {
 	slotId?: string
 
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'slot select',
-			params: {}
+			params: {},
 		}
 
 		if (this.slotId) {

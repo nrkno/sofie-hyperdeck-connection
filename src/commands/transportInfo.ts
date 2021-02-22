@@ -19,7 +19,7 @@ export interface TransportInfoCommandResponse {
 export class TransportInfoCommand extends AbstractCommand {
 	expectedResponseCode = SynchronousCode.TransportInfo
 
-	deserialize (msg: ResponseMessage) {
+	deserialize(msg: ResponseMessage): TransportInfoCommandResponse {
 		const res: TransportInfoCommandResponse = {
 			status: msg.params['status'] as TransportStatus,
 			speed: parseInt(msg.params['speed'], 10),
@@ -29,14 +29,14 @@ export class TransportInfoCommand extends AbstractCommand {
 			displayTimecode: msg.params['display timecode'],
 			timecode: msg.params['timecode'],
 			videoFormat: msg.params['video format'] as VideoFormat,
-			loop: parseBool(msg.params['loop']) || false
+			loop: parseBool(msg.params['loop']) || false,
 		}
 		return res
 	}
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'transport info',
-			params: {}
+			params: {},
 		}
 
 		return res

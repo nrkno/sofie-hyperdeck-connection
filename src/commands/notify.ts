@@ -14,20 +14,20 @@ export interface NotifyCommandResponse {
 export class NotifyGetCommand extends AbstractCommand {
 	expectedResponseCode = SynchronousCode.Notify
 
-	deserialize (msg: ResponseMessage) {
+	deserialize(msg: ResponseMessage): NotifyCommandResponse {
 		const res: NotifyCommandResponse = {
 			remote: msg.params['remote'] === 'true',
 			transport: msg.params['transport'] === 'true',
 			slot: msg.params['slot'] === 'true',
 			configuration: msg.params['configuration'] === 'true',
-			droppedFrames: msg.params['dropped frames'] === 'true'
+			droppedFrames: msg.params['dropped frames'] === 'true',
 		}
 		return res
 	}
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'notify',
-			params: {}
+			params: {},
 		}
 
 		return res
@@ -41,10 +41,10 @@ export class NotifySetCommand extends AbstractCommandNoResponse {
 	configuration?: boolean
 	droppedFrames?: boolean
 
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'notify',
-			params: {}
+			params: {},
 		}
 
 		SetBoolIfDefined(res, 'remote', this.remote)

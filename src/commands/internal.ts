@@ -7,14 +7,14 @@ import { ConnectionInfoResponse } from './connect'
 export class DummyConnectCommand extends AbstractCommand {
 	expectedResponseCode = AsynchronousCode.ConnectionInfo
 
-	deserialize (msg: ResponseMessage) {
+	deserialize(msg: ResponseMessage): ConnectionInfoResponse {
 		const res: ConnectionInfoResponse = {
 			protocolVersion: parseFloat(msg.params['protocol version']),
-			model: msg.params['model']
+			model: msg.params['model'],
 		}
 		return res
 	}
-	serialize () {
+	serialize(): null {
 		// Nothing to send
 		return null
 	}
@@ -23,17 +23,17 @@ export class DummyConnectCommand extends AbstractCommand {
 export class WatchdogPeriodCommand extends AbstractCommandNoResponse {
 	readonly Period: number
 
-	constructor (period: number) {
+	constructor(period: number) {
 		super()
 		this.Period = period
 	}
 
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'watchdog',
 			params: {
-				period: this.Period + ''
-			}
+				period: this.Period + '',
+			},
 		}
 
 		return res
@@ -41,10 +41,10 @@ export class WatchdogPeriodCommand extends AbstractCommandNoResponse {
 }
 
 export class PingCommand extends AbstractCommandNoResponse {
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'ping',
-			params: {}
+			params: {},
 		}
 
 		return res
@@ -52,10 +52,10 @@ export class PingCommand extends AbstractCommandNoResponse {
 }
 
 export class QuitCommand extends AbstractCommandNoResponse {
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'quit',
-			params: {}
+			params: {},
 		}
 
 		return res

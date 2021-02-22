@@ -1,4 +1,3 @@
-
 export type ResponseCode = ErrorCode | SynchronousCode | AsynchronousCode
 
 export enum ErrorCode {
@@ -19,7 +18,7 @@ export enum ErrorCode {
 	InvalidCodec = 151,
 	InvalidFormat = 160,
 	InvalidToken = 161,
-	FormatNotPrepared = 162
+	FormatNotPrepared = 162,
 }
 
 export enum SynchronousCode {
@@ -29,23 +28,23 @@ export enum SynchronousCode {
 	DiskList = 206,
 	TransportInfo = 208,
 	Notify = 209,
-	FormatReady = 216
+	FormatReady = 216,
 }
 
 export enum AsynchronousCode {
 	ConnectionInfo = 500,
 	SlotInfo = 502,
-	TransportInfo = 508
+	TransportInfo = 508,
 }
 
 export enum ResponseCodeType {
 	UNKNOWN,
 	ERROR,
 	SYNCHRONOUS,
-	ASYNCHRONOUS
+	ASYNCHRONOUS,
 }
 
-export function GetResponseCodeType (val: ResponseCode): ResponseCodeType {
+export function GetResponseCodeType(val: ResponseCode): ResponseCodeType {
 	if (val >= 100 && val <= 199) return ResponseCodeType.ERROR
 	if (val >= 200 && val <= 299) return ResponseCodeType.SYNCHRONOUS
 	if (val >= 500 && val <= 599) return ResponseCodeType.ASYNCHRONOUS
