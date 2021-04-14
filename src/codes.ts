@@ -41,6 +41,7 @@ export enum AsynchronousCode {
 	ConnectionInfo = 500,
 	SlotInfo = 502,
 	TransportInfo = 508,
+	Configuration = 511,
 	DisplayTimecode = 513,
 	TimelinePosition = 514,
 }
