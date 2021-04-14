@@ -3,9 +3,9 @@ import { IHandler } from './iHandler'
 import { AsynchronousCode } from '../codes'
 
 export interface ConfigurationChangeResponse {
-	audioInput?: 'embedded' | 'XLR' | 'RCA',
-	videoInput?: 'SDI' | 'HDMI' | 'component' | string,
-	fileFormat?: string,
+	audioInput?: 'embedded' | 'XLR' | 'RCA'
+	videoInput?: 'SDI' | 'HDMI' | 'component' | string
+	fileFormat?: string
 }
 
 export class ConfigurationChange implements IHandler {
