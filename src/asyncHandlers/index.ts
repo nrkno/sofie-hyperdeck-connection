@@ -1,3 +1,4 @@
+export * from './configuration'
 export * from './displayTimecode'
 export * from './iHandler'
 export * from './slotInfo'
