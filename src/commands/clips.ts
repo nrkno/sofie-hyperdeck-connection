@@ -14,6 +14,9 @@ export interface ClipsGetCommandResponse {
 	clipCount: number
 	clips: ClipInfo[]
 }
+export interface ClipsCountCommandResponse {
+	count: number
+}
 
 export class ClipsGetCommand extends AbstractCommand {
 	expectedResponseCode = SynchronousCode.ClipsGet
@@ -61,6 +64,30 @@ export class ClipsGetCommand extends AbstractCommand {
 		if (this.clip !== undefined) res.params['clip id'] = this.clip + ''
 		if (this.count !== undefined) res.params['count'] = this.count + ''
 		if (this.version !== undefined) res.params['version'] = this.version + ''
+
+		return res
+	}
+}
+
+export class ClipsCountCommand extends AbstractCommand {
+	expectedResponseCode = SynchronousCode.ClipsCount
+
+	constructor(public clip?: number, public count?: number, public readonly version?: 1 | 2) {
+		super()
+	}
+
+	deserialize(msg: ResponseMessage): ClipsCountCommandResponse {
+		const res: ClipsCountCommandResponse = {
+			count: parseInt(msg.params['clip count'], 10),
+		}
+
+		return res
+	}
+	serialize(): NamedMessage {
+		const res: NamedMessage = {
+			name: 'clips count',
+			params: {},
+		}
 
 		return res
 	}

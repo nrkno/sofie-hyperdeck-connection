@@ -29,6 +29,7 @@ export enum SynchronousCode {
 	DiskList = 206,
 	TransportInfo = 208,
 	Notify = 209,
+	ClipsCount = 214,
 	FormatReady = 216,
 	PlayOnStartup = 218,
 	Playrange = 219,
