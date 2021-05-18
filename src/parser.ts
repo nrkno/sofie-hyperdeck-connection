@@ -1,9 +1,8 @@
-import * as _ from 'underscore'
 import { ResponseMessage, NamedMessage } from './message'
 import { SynchronousCode } from './codes'
 
 export function buildMessageStr(msg: NamedMessage): string {
-	if (_.isEmpty(msg.params)) {
+	if (Object.keys(msg.params).length === 0) {
 		return msg.name + '\r\n'
 	}
 
