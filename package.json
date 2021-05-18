@@ -42,15 +42,14 @@
     "send-coverage": "codecov",
     "docs": "yarn docs:html && open-cli docs/index.html",
     "docs:test": "yarn docs:html",
-    "docs:html": "typedoc src/index.ts --excludePrivate --mode file --theme minimal --out docs",
-    "docs:json": "typedoc --mode file --json docs/typedoc.json src/index.ts",
-    "docs:publish": "yarn docs:html && gh-pages -d docs",
+    "docs:html": "typedoc --entryPoints src/index.ts --excludePrivate --theme minimal --out docs",
+    "docs:json": "typedoc --json docs/typedoc.json --entryPoints src/index.ts",
     "changelog": "standard-version",
     "release": "yarn reset && yarn test && yarn docs:publish && yarn changelog",
     "reset": "git clean -dfx && git reset --hard && yarn",
     "validate:dependencies": "yarn audit --groups dependencies && yarn license-validate",
     "validate:dev-dependencies": "yarn audit --groups devDependencies",
-    "license-validate": "yarn sofie-licensecheck"
+    "license-validate": "yarn sofie-licensecheck --allowPackages caniuse-lite@1.0.30001228"
   },
   "scripts-info": {
     "info": "Display information about the scripts",
@@ -76,7 +75,7 @@
     "license-validate": "Validate licenses for dependencies."
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "files": [
     "/dist",
@@ -85,29 +84,20 @@
     "/LICENSE"
   ],
   "devDependencies": {
-    "@sofie-automation/code-standard-preset": "^0.2.3",
+    "@sofie-automation/code-standard-preset": "^0.3.0",
     "@types/jest": "^26.0.15",
     "@types/node": "^12.12.5",
-    "@types/underscore": "^1.10.24",
     "codecov": "^3.1.0",
-    "eslint": "^7.11.0",
     "gh-pages": "^2.1.1",
     "jest": "^26.4.1",
-    "lint-staged": "^10.4.0",
-    "mkdirp": "^0.5.1",
     "npm-scripts-info": "^0.3.7",
-    "open-cli": "^5.0.0",
-    "prettier": "^2.1.2",
+    "open-cli": "^6.0.1",
     "sleep-ms": "^2.0.1",
-    "standard-version": "^7.0.0",
+    "standard-version": "^9.2.0",
     "trash-cli": "^3.0.0",
     "ts-jest": "^26.4.1",
-    "typedoc": "^0.19.0",
+    "typedoc": "^0.20.35",
     "typescript": "~4.0"
-  },
-  "resolutions": {
-    "yargs-parser": "^18.1.2",
-    "compare-func": "2.0.0"
   },
   "keywords": [
     "blackmagic",
@@ -120,9 +110,7 @@
     "source"
   ],
   "dependencies": {
-    "tslib": "^2.0.3",
-    "underscore": "^1.9.1",
-    "underscore-deep-extend": "^1.1.5"
+    "tslib": "^2.0.3"
   },
   "standard-version": {
     "message": "chore(release): %s [skip ci]",
