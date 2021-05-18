@@ -72,10 +72,6 @@ export class ClipsGetCommand extends AbstractCommand {
 export class ClipsCountCommand extends AbstractCommand {
 	expectedResponseCode = SynchronousCode.ClipsCount
 
-	constructor(public clip?: number, public count?: number, public readonly version?: 1 | 2) {
-		super()
-	}
-
 	deserialize(msg: ResponseMessage): ClipsCountCommandResponse {
 		const res: ClipsCountCommandResponse = {
 			count: parseInt(msg.params['clip count'], 10),
