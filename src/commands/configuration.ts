@@ -17,7 +17,7 @@ export interface ConfigurationCommandResponse {
 }
 
 export class ConfigurationGetCommand extends AbstractCommand {
-	expectedResponseCode = SynchronousCode.DeviceInfo
+	expectedResponseCode = SynchronousCode.Configuration
 
 	deserialize(msg: ResponseMessage): ConfigurationCommandResponse {
 		const res: ConfigurationCommandResponse = {
