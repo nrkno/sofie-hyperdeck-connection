@@ -11,6 +11,8 @@ export class FormatCommand extends AbstractCommand {
 	expectedResponseCode = SynchronousCode.FormatReady
 
 	filesystem?: FilesystemFormat
+	slotId?: number
+	name?: string
 
 	deserialize(msg: ResponseMessage): FormatCommandResponse {
 		return {
@@ -27,6 +29,8 @@ export class FormatCommand extends AbstractCommand {
 		if (this.filesystem) {
 			res.params['prepare'] = this.filesystem
 		}
+		if (this.slotId) res.params['slot id'] = this.slotId + ''
+		if (this.name) res.params['name'] = this.name
 
 		return res
 	}

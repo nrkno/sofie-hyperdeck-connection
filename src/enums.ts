@@ -37,6 +37,9 @@ export enum VideoFormat {
 	_1080i50 = '1080i50',
 	_1080i5994 = '1080i5994',
 	_1080i60 = '1080i60',
+	_1080p50 = '1080p50',
+	_1080p5994 = '1080p5994',
+	_1080p60 = '1080p60',
 	_4Kp23976 = '4Kp23976',
 	_4Kp24 = '4Kp24',
 	_4Kp25 = '4Kp25',
@@ -50,4 +53,18 @@ export enum VideoFormat {
 export enum FilesystemFormat {
 	exFAT = 'exFAT',
 	HFS = 'HFS+',
+}
+
+export enum DynamicRange {
+	Off = 'off',
+	Rec709 = 'Rec709',
+	Rec2020_SDR = 'Rec2020_SDR',
+	HLG = 'HLG',
+	ST2084_300 = 'ST2084_300',
+	ST2084_500 = 'ST2084_500',
+	ST2084_800 = 'ST2084_800',
+	ST2084_1000 = 'ST2084_1000',
+	ST2084_2000 = 'ST2084_2000',
+	ST2084_4000 = 'ST2084_4000',
+	ST2048 = 'ST2048',
 }

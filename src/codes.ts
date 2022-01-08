@@ -25,16 +25,27 @@ export enum SynchronousCode {
 	OK = 200,
 	SlotInfo = 202,
 	DeviceInfo = 204,
+	ClipsGet = 205,
 	DiskList = 206,
 	TransportInfo = 208,
 	Notify = 209,
+	Configuration = 211,
+	ClipsCount = 214,
 	FormatReady = 216,
+	PlayOnStartup = 218,
+	Playrange = 219,
+	PlayOption = 220,
+	CacheInfo = 221,
+	DynamicRange = 222,
 }
 
 export enum AsynchronousCode {
 	ConnectionInfo = 500,
 	SlotInfo = 502,
 	TransportInfo = 508,
+	Configuration = 511,
+	DisplayTimecode = 513,
+	TimelinePosition = 514,
 }
 
 export enum ResponseCodeType {
