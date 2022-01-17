@@ -1,7 +1,7 @@
 {
   "name": "hyperdeck-connection",
   "version": "0.4.4",
-  "description": "Typescript Node.js library for connecting with a Blackmagic Hyperdeck",
+  "description": "Typescript Node.js library for connecting with a BlackmagicDesign's HyperDeck devices.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "module": "dist/module/index.js",
@@ -9,22 +9,22 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nrkno/tv-automation-hyperdeck-connection.git"
+    "url": "git+https://github.com/nrkno/sofie-hyperdeck-connection.git"
   },
   "bugs": {
-    "url": "https://github.com/nrkno/tv-automation-hyperdeck-connection/issues"
+    "url": "https://github.com/nrkno/sofie-hyperdeck-connection/issues"
   },
-  "homepage": "https://github.com/nrkno/tv-automation-hyperdeck-connection#readme",
+  "homepage": "https://github.com/nrkno/sofie-hyperdeck-connection#readme",
   "contributors": [
     {
       "name": "Julian Waller",
       "email": "julian@superfly.tv",
-      "url": "http://superfly.tv"
+      "url": "https://superfly.tv"
     },
     {
       "name": "Balte de Wit",
       "email": "balte@superfly.tv",
-      "url": "http://superfly.tv"
+      "url": "https://superfly.tv"
     }
   ],
   "scripts": {
