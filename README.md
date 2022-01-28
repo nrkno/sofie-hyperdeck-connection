@@ -41,13 +41,13 @@ myHyperdeck.on('connected', (info) => {
 	console.log(info)
 	// ConnectionInfoResponse {
 	//  protocolVersion: 1.6,
-	//  model: 
+	//  model:
 	// }
 
 	myHyperdeck.sendCommand(new Commands.RecordCommand('some_filename')).then(() => {
 		console.log('recording')
 	})
-	
+
 	myHyperdeck.sendCommand(new Commands.TransportInfoCommand()).then((transportInfo) => {
 		console.log(transportInfo)
 	})
@@ -58,6 +58,9 @@ myHyperdeck.on('notify.slot', function(err, state) {
 });
 myHyperdeck.on('notify.transport', function(err, state) {
   console.log(state); // catch the transport state change.
+});
+myHyperdeck.on('error', (err) => {
+    console.log('Hyperdeck error', err)
 });
 ```
 
