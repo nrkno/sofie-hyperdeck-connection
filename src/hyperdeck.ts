@@ -198,7 +198,7 @@ export class Hyperdeck extends EventEmitter {
 			})
 			.catch((e) => {
 				this._connected = false
-				this.socket.end()
+				this.socket.destroy()
 				this.emit('error', 'connection failed', e)
 				this._log('connection failed', e)
 
@@ -259,7 +259,7 @@ export class Hyperdeck extends EventEmitter {
 		} catch (e) {
 			this._log('socket write failed', e)
 			try {
-				this.socket.end()
+				this.socket.destroy()
 			} catch (e2) {
 				// ignore
 			}

@@ -65,7 +65,7 @@ export class Socket extends EventEmitter {
 			this.onWrite(buff, encoding)
 		}
 	}
-	public end(): void {
+	public destroy(): void {
 		this.setEnd()
 		this.setClosed()
 	}

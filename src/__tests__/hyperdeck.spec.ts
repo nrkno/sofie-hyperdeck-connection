@@ -104,7 +104,7 @@ describe('Hyperdeck', () => {
 		expect(onConnection).toHaveBeenCalledTimes(1)
 		expect(onDisconnection).toHaveBeenCalledTimes(0)
 
-		thisSocket?.end()
+		thisSocket?.destroy()
 		await waitALittleBit()
 
 		expect(hp.connected).toBeFalsy()
