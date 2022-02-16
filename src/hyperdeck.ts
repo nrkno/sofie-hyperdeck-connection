@@ -110,17 +110,19 @@ export class Hyperdeck extends EventEmitter {
 	}
 
 	async disconnect(): Promise<void> {
-		this._connectionActive = false
-		if (this._retryConnectTimeout) {
-			clearTimeout(this._retryConnectTimeout)
-			this._retryConnectTimeout = null
-		}
+		try {
+			this._connectionActive = false
+			if (this._retryConnectTimeout) {
+				clearTimeout(this._retryConnectTimeout)
+				this._retryConnectTimeout = null
+			}
 
-		if (this._connected) {
-			await this.sendCommand(new QuitCommand())
+			if (this._connected) {
+				await this.sendCommand(new QuitCommand())
+			}
+		} finally {
+			this.socket.destroy()
 		}
-
-		this.socket.destroy()
 	}
 
 	async sendCommand(command: AbstractCommand): Promise<any> {
