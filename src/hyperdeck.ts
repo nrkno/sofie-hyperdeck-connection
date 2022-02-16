@@ -71,7 +71,11 @@ export class Hyperdeck extends EventEmitter {
 
 		this.socket = new Socket()
 		this.socket.setEncoding('utf8')
-		this.socket.on('error', (e) => this.emit('error', e))
+		this.socket.on('error', (e) => {
+			if (this._connectionActive) {
+				this.emit('error', e)
+			}
+		})
 		this.socket.on('close', () => {
 			if (this._connected) this.emit('disconnected')
 			this._connected = false
@@ -109,12 +113,14 @@ export class Hyperdeck extends EventEmitter {
 		this._connectionActive = false
 		if (this._retryConnectTimeout) {
 			clearTimeout(this._retryConnectTimeout)
+			this._retryConnectTimeout = null
 		}
 
-		if (!this._connected) return Promise.resolve()
+		if (this._connected) {
+			await this.sendCommand(new QuitCommand())
+		}
 
-		await this.sendCommand(new QuitCommand())
-		this.socket.end()
+		this.socket.destroy()
 	}
 
 	sendCommand(command: AbstractCommand): Promise<any> {
