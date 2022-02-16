@@ -2,38 +2,26 @@ import { AsynchronousCode, SynchronousCode, ErrorCode, ResponseCodeType, GetResp
 
 describe('Codes', () => {
 	test('Codes: AsynchronousCode range', async () => {
-		for (const item in AsynchronousCode) {
-			const v = Number(item)
-			if (!isNaN(v)) {
-				expect(GetResponseCodeType(v)).toEqual(ResponseCodeType.ASYNCHRONOUS)
-			}
+		for (const v of Object.values(AsynchronousCode).filter((v): v is AsynchronousCode => typeof v === 'number')) {
+			expect(GetResponseCodeType(v)).toEqual(ResponseCodeType.ASYNCHRONOUS)
 		}
 	})
 
 	test('Codes: SynchronousCode range', async () => {
-		for (const item in SynchronousCode) {
-			const v = Number(item)
-			if (!isNaN(v)) {
-				expect(GetResponseCodeType(v)).toEqual(ResponseCodeType.SYNCHRONOUS)
-			}
+		for (const v of Object.values(SynchronousCode).filter((v): v is SynchronousCode => typeof v === 'number')) {
+			expect(GetResponseCodeType(v)).toEqual(ResponseCodeType.SYNCHRONOUS)
 		}
 	})
 
 	test('Codes: ErrorCode range', async () => {
-		for (const item in ErrorCode) {
-			const v = Number(item)
-			if (!isNaN(v)) {
-				expect(GetResponseCodeType(v)).toEqual(ResponseCodeType.ERROR)
-			}
+		for (const v of Object.values(ErrorCode).filter((v): v is ErrorCode => typeof v === 'number')) {
+			expect(GetResponseCodeType(v)).toEqual(ResponseCodeType.ERROR)
 		}
 	})
 
 	test('Codes: ResponseCode range', async () => {
-		for (const item in ErrorCode) {
-			const v = Number(item)
-			if (!isNaN(v)) {
-				expect(GetResponseCodeType(v)).not.toEqual(ResponseCodeType.UNKNOWN)
-			}
+		for (const v of Object.values(ErrorCode).filter((v): v is ErrorCode => typeof v === 'number')) {
+			expect(GetResponseCodeType(v)).not.toEqual(ResponseCodeType.UNKNOWN)
 		}
 	})
 })

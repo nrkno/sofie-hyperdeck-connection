@@ -6,7 +6,7 @@ import { StopCommand } from '../commands'
 jest.mock('net')
 const setTimeoutOrg = setTimeout
 
-function waitALittleBit() {
+async function waitALittleBit() {
 	return new Promise((resolve) => {
 		setTimeoutOrg(resolve, 10)
 	})
@@ -116,6 +116,7 @@ describe('Hyperdeck', () => {
 		expect(onSocketWrite).toHaveBeenCalledTimes(0)
 	})
 
+	// eslint-disable-next-line jest/no-commented-out-tests
 	// test('Check protocol version', async () => {
 	// 	let onSocketCreate = jest.fn()
 	// 	let onConnection = jest.fn()

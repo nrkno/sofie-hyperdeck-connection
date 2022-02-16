@@ -123,7 +123,7 @@ export class Hyperdeck extends EventEmitter {
 		this.socket.destroy()
 	}
 
-	sendCommand(command: AbstractCommand): Promise<any> {
+	async sendCommand(command: AbstractCommand): Promise<any> {
 		if (!this._connected) return Promise.reject()
 
 		const res = this._queueCommand(command)
@@ -238,7 +238,7 @@ export class Hyperdeck extends EventEmitter {
 		}
 	}
 
-	private _queueCommand(command: AbstractCommand): Promise<any> {
+	private async _queueCommand(command: AbstractCommand): Promise<any> {
 		const cmdWrapper = new QueuedCommand(command)
 		this._commandQueue.push(cmdWrapper)
 		return cmdWrapper.promise
