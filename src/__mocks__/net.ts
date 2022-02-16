@@ -53,10 +53,11 @@ export class Socket extends EventEmitter {
 		}, 3)
 	}
 	public write(buff: Buffer, encoding = 'utf8'): void {
-		expect(this.expectedWrites).not.toHaveLength(0)
+		if (this.expectedWrites.length === 0) throw new Error('Got unexpected write')
 
 		const w = this.expectedWrites.shift()
 		if (w) {
+			// eslint-disable-next-line jest/no-standalone-expect
 			expect(buff).toEqual(w.call)
 			this.emit('data', w.response)
 		}

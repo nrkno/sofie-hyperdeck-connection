@@ -184,7 +184,12 @@ export class Hyperdeck extends EventEmitter {
 						.then(() => {
 							this._logDebug('ping: setting up')
 							this._pingInterval = setInterval(() => {
-								if (this.connected) this._performPing().catch((e) => this.emit('error', e))
+								if (this.connected)
+									this._performPing().catch((e) => {
+										if (this._connectionActive) {
+											this.emit('error', e)
+										}
+									})
 							}, this._pingPeriod)
 						})
 						.then(() => c)
@@ -199,7 +204,9 @@ export class Hyperdeck extends EventEmitter {
 			.catch((e) => {
 				this._connected = false
 				this.socket.destroy()
-				this.emit('error', 'connection failed', e)
+				if (this._connectionActive) {
+					this.emit('error', 'connection failed', e)
+				}
 				this._log('connection failed', e)
 
 				this._triggerRetryConnection()
