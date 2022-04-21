@@ -7,13 +7,13 @@ export interface ConfigurationChangeResponse {
 	videoInput?: 'SDI' | 'HDMI' | 'component' | string
 	fileFormat?: string
 	// v1.11:
-    audioCodec?: 'PCM' | 'AAC';
-    timecodeInput?: 'external' | 'embedded' | 'preset' | 'clip';
-    timecodePreset?: string;
-    audioInputChannels?: number;
-    recordTrigger?: 'none' | 'recordbit' | 'timecoderun';
-    recordPrefix?: string;
-    appendTimestamp?: boolean;
+	audioCodec?: 'PCM' | 'AAC';
+	timecodeInput?: 'external' | 'embedded' | 'preset' | 'clip';
+	timecodePreset?: string;
+	audioInputChannels?: number;
+	recordTrigger?: 'none' | 'recordbit' | 'timecoderun';
+	recordPrefix?: string;
+	appendTimestamp?: boolean;
 }
 
 export class ConfigurationChange implements IHandler {
