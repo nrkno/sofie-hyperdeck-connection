@@ -26,12 +26,12 @@ export class ConfigurationChange implements IHandler {
 			videoInput: msg.params['video input'] as ConfigurationChangeResponse['videoInput'],
 			fileFormat: msg.params['file format'] as ConfigurationChangeResponse['fileFormat'],
 			// v1.11 optional props:
-			audioCodec: msg.params['audio codec'] as ConfigurationCommandResponse['audioCodec'],
-			timecodeInput: msg.params['timecode input'] as ConfigurationCommandResponse['timecodeInput'],
-			timecodePreset: msg.params['timecode preset'] as ConfigurationCommandResponse['timecodePreset'],
+			audioCodec: msg.params['audio codec'] as ConfigurationChangeResponse['audioCodec'],
+			timecodeInput: msg.params['timecode input'] as ConfigurationChangeResponse['timecodeInput'],
+			timecodePreset: msg.params['timecode preset'] as ConfigurationChangeResponse['timecodePreset'],
 			audioInputChannels: msg.params['audio input'] ? parseInt(msg.params['audio input channels']) : undefined,
-			recordTrigger: msg.params['record trigger'] as ConfigurationCommandResponse['recordTrigger'],
-			recordPrefix: msg.params['record prefix'] as ConfigurationCommandResponse['recordPrefix'],
+			recordTrigger: msg.params['record trigger'] as ConfigurationChangeResponse['recordTrigger'],
+			recordPrefix: msg.params['record prefix'] as ConfigurationChangeResponse['recordPrefix'],
 			appendTimestamp: msg.params['append timestamp'] ? msg.params['append timestamp'] === 'true' : undefined,
 		}
 		return res
