@@ -29,7 +29,9 @@ export class ConfigurationChange implements IHandler {
 			audioCodec: msg.params['audio codec'] as ConfigurationChangeResponse['audioCodec'],
 			timecodeInput: msg.params['timecode input'] as ConfigurationChangeResponse['timecodeInput'],
 			timecodePreset: msg.params['timecode preset'] as ConfigurationChangeResponse['timecodePreset'],
-			audioInputChannels: msg.params['audio input'] ? parseInt(msg.params['audio input channels']) : undefined,
+			audioInputChannels: msg.params['audio input channels']
+				? parseInt(msg.params['audio input channels'])
+				: undefined,
 			recordTrigger: msg.params['record trigger'] as ConfigurationChangeResponse['recordTrigger'],
 			recordPrefix: msg.params['record prefix'] as ConfigurationChangeResponse['recordPrefix'],
 			appendTimestamp: msg.params['append timestamp'] ? msg.params['append timestamp'] === 'true' : undefined,
