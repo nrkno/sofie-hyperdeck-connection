@@ -28,7 +28,9 @@ export class ConfigurationGetCommand extends AbstractCommand {
 			audioCodec: msg.params['audio codec'] as ConfigurationCommandResponse['audioCodec'],
 			timecodeInput: msg.params['timecode input'] as ConfigurationCommandResponse['timecodeInput'],
 			timecodePreset: msg.params['timecode preset'] as ConfigurationCommandResponse['timecodePreset'],
-			audioInputChannels: msg.params['audio input'] ? parseInt(msg.params['audio input channels']) : undefined,
+			audioInputChannels: msg.params['audio input channels']
+				? parseInt(msg.params['audio input channels'])
+				: undefined,
 			recordTrigger: msg.params['record trigger'] as ConfigurationCommandResponse['recordTrigger'],
 			recordPrefix: msg.params['record prefix'] as ConfigurationCommandResponse['recordPrefix'],
 			appendTimestamp: msg.params['append timestamp'] ? msg.params['append timestamp'] === 'true' : undefined,
