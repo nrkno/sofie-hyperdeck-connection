@@ -1,7 +1,16 @@
-import { NamedMessage } from '../message'
-import { AbstractCommandNoResponse } from './abstractCommand'
+import { SynchronousCode } from '../codes'
+import { ResponseMessage, NamedMessage } from '../message'
+import { parseBool } from '../util'
+import { AbstractCommand } from './abstractCommand'
 
-export class RemoteCommand extends AbstractCommandNoResponse {
+export interface RemoteInfoCommandResponse {
+	enabled?: boolean
+	override?: boolean
+}
+
+export class RemoteCommand extends AbstractCommand {
+	expectedResponseCode = SynchronousCode.RemoteInfo
+
 	enable?: boolean
 
 	constructor(enable?: boolean) {
@@ -10,6 +19,13 @@ export class RemoteCommand extends AbstractCommandNoResponse {
 		this.enable = enable
 	}
 
+	deserialize(msg: ResponseMessage): RemoteInfoCommandResponse {
+		const res: RemoteInfoCommandResponse = {
+			enabled: parseBool(msg.params['enabled']),
+			override: parseBool(msg.params['override']),
+		}
+		return res
+	}
 	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'remote',
