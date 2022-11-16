@@ -29,7 +29,7 @@ export class RemoteGetCommand extends AbstractCommand {
 	}
 }
 
-export class RemoteSetCommand extends AbstractCommandNoResponse {
+export class RemoteCommand extends AbstractCommandNoResponse {
 	enable?: boolean
 
 	constructor(enable?: boolean) {
