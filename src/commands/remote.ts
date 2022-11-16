@@ -1,23 +1,16 @@
 import { SynchronousCode } from '../codes'
 import { ResponseMessage, NamedMessage } from '../message'
 import { parseBool } from '../util'
-import { AbstractCommand } from './abstractCommand'
+import { AbstractCommand, AbstractCommandNoResponse } from './abstractCommand'
 
 export interface RemoteInfoCommandResponse {
 	enabled?: boolean
 	override?: boolean
 }
 
-export class RemoteCommand extends AbstractCommand {
+//TODO A response is optional, may be a 200. How do we handle this?
+export class RemoteGetCommand extends AbstractCommand {
 	expectedResponseCode = SynchronousCode.RemoteInfo
-
-	enable?: boolean
-
-	constructor(enable?: boolean) {
-		super()
-
-		this.enable = enable
-	}
 
 	deserialize(msg: ResponseMessage): RemoteInfoCommandResponse {
 		const res: RemoteInfoCommandResponse = {
@@ -26,6 +19,25 @@ export class RemoteCommand extends AbstractCommand {
 		}
 		return res
 	}
+	serialize(): NamedMessage {
+		const res: NamedMessage = {
+			name: 'remote',
+			params: {},
+		}
+
+		return res
+	}
+}
+
+export class RemoteSetCommand extends AbstractCommandNoResponse {
+	enable?: boolean
+
+	constructor(enable?: boolean) {
+		super()
+
+		this.enable = enable
+	}
+
 	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'remote',
