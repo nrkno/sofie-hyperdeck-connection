@@ -8,7 +8,6 @@ export interface RemoteInfoCommandResponse {
 	override?: boolean
 }
 
-//TODO A response is optional, may be a 200. How do we handle this?
 export class RemoteGetCommand extends AbstractCommand {
 	expectedResponseCode = SynchronousCode.RemoteInfo
 
