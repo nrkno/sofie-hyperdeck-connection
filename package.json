@@ -44,7 +44,7 @@
     "docs:test": "yarn docs:html",
     "docs:html": "typedoc --entryPoints src/index.ts --excludePrivate --theme default --out docs",
     "docs:json": "typedoc --json docs/typedoc.json --entryPoints src/index.ts",
-    "changelog": "standard-version",
+    "changelog": "sofie-version",
     "release": "yarn reset && yarn test && yarn changelog",
     "reset": "git clean -dfx && git reset --hard && yarn",
     "validate:dependencies": "yarn audit --groups dependencies && yarn license-validate",
@@ -61,13 +61,12 @@
     "/LICENSE"
   ],
   "devDependencies": {
-    "@sofie-automation/code-standard-preset": "~1.1.0",
+    "@sofie-automation/code-standard-preset": "~2.2.0",
     "@types/jest": "^27.4.0",
     "@types/node": "^12.20.46",
     "jest": "^27.5.1",
     "open-cli": "^6.0.1",
     "rimraf": "^3.0.2",
-    "standard-version": "^9.3.2",
     "ts-jest": "^27.1.3",
     "typedoc": "^0.22.11",
     "typescript": "~4.5"
@@ -84,10 +83,6 @@
   ],
   "dependencies": {
     "tslib": "^2.3.1"
-  },
-  "standard-version": {
-    "message": "chore(release): %s",
-    "tagPrefix": ""
   },
   "prettier": "@sofie-automation/code-standard-preset/.prettierrc.json",
   "lint-staged": {
