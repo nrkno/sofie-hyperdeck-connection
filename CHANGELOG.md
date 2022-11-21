@@ -1,6 +1,14 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [Convential Commits](https://www.conventionalcommits.org/en/v1.0.0/#specification) for commit guidelines.
+
+## [1.0.0](https://github.com/nrkno/sofie-hyperdeck-connection/compare/0.5.0...v1.0.0) (Mon Nov 21 2022)
+
+## Breaking changes
+
+### Features
+
+- **!** remove node 12 support [65fa9ee](https://github.com/nrkno/sofie-hyperdeck-connection/commit/65fa9ee766e5856be3bbcd366d0a1d7fd7ed4ffe)
 
 ## [0.5.0](https://github.com/nrkno/sofie-hyperdeck-connection/compare/0.4.4...0.5.0) (2022-04-29)
 
