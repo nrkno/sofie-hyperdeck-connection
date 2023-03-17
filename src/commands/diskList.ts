@@ -4,7 +4,7 @@ import { NamedMessage, ResponseMessage } from '../message'
 import { AbstractCommand } from './abstractCommand'
 
 const deserializeRegex = /(?<fileName>.+) (?<codec>\w+) (?<format>\w+) (?<timecode>[\d:]+)$/i
-const framerateRegex = /\d+[ip](?<frameRate>\d+)/i
+const framerateRegex = /\d+(?<scan>[ip])(?<frameRate>\d+)/i
 const timecodeRegex = /(?<hours>\d+):(?<minutes>\d+):(?<seconds>\d+):(?<frames>\d+)/i
 
 export interface Clip {
@@ -45,8 +45,9 @@ export class DiskListCommand extends AbstractCommand {
 				const frameRateMatch = match?.groups?.format.match(framerateRegex)
 				const timecodeMatch = match?.groups?.timecode.match(timecodeRegex)
 				if (match?.groups && frameRateMatch?.groups && timecodeMatch?.groups) {
-					const frameRate = parseInt(frameRateMatch.groups.frameRate, 10)
-					const msPerFrame = 1000 / frameRate
+					const interlaced = frameRateMatch.groups.scan.toLowerCase() === 'i'
+					const fieldRate = parseInt(frameRateMatch.groups.frameRate, 10)
+					const msPerFrame = 1000 / (interlaced ? fieldRate / 2 : fieldRate)
 					const hoursMs = parseInt(timecodeMatch.groups.hours, 10) * 60 * 60 * 1000
 					const minutesMs = parseInt(timecodeMatch.groups.minutes, 10) * 60 * 1000
 					const secondsMs = parseInt(timecodeMatch.groups.seconds, 10) * 1000
