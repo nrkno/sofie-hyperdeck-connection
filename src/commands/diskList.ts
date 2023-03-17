@@ -45,9 +45,11 @@ export class DiskListCommand extends AbstractCommand {
 				const frameRateMatch = match?.groups?.format.match(framerateRegex)
 				const timecodeMatch = match?.groups?.timecode.match(timecodeRegex)
 				if (match?.groups && frameRateMatch?.groups && timecodeMatch?.groups) {
+					// according to the manual, timecodes are expressed as non-drop-frame
 					const interlaced = frameRateMatch.groups.scan.toLowerCase() === 'i'
-					const fieldRate = parseInt(frameRateMatch.groups.frameRate, 10)
-					const msPerFrame = 1000 / (interlaced ? fieldRate / 2 : fieldRate)
+					const rawFrameRate = parseInt(frameRateMatch.groups.frameRate, 10)
+					const frameRate = Math.round(interlaced ? rawFrameRate / 2 : rawFrameRate)
+					const msPerFrame = 1000 / (interlaced ? frameRate / 2 : frameRate)
 					const hoursMs = parseInt(timecodeMatch.groups.hours, 10) * 60 * 60 * 1000
 					const minutesMs = parseInt(timecodeMatch.groups.minutes, 10) * 60 * 1000
 					const secondsMs = parseInt(timecodeMatch.groups.seconds, 10) * 1000
