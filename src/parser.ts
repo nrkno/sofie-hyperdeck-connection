@@ -7,7 +7,7 @@ export function buildMessageStr(msg: NamedMessage): string {
 	}
 
 	let str = msg.name + ':\r\n'
-	Object.entries(msg.params).forEach(([k, v]) => {
+	Object.entries<string>(msg.params).forEach(([k, v]) => {
 		str += k + ': ' + v + '\r\n'
 	})
 
