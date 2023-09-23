@@ -1,6 +1,6 @@
 import { TransportStatus, VideoFormat } from '../enums'
 import { ResponseMessage } from '../message'
-import { parseIdOrNone, parseIntIfDefined, parseBool } from '../util'
+import { parseIdOrNone, parseIntIfDefined, parseBool, parseStringOrNone } from '../util'
 import { IHandler } from './iHandler'
 import { AsynchronousCode } from '../codes'
 import { TransportInfoChangeResponse } from '../events'
@@ -18,8 +18,9 @@ export class TransportInfoChange implements IHandler<'notify.transport'> {
 			singleClip: parseBool(msg.params['single clip']),
 			displayTimecode: msg.params['display timecode'],
 			timecode: msg.params['timecode'],
-			videoFormat: msg.params['video format'] as VideoFormat,
+			videoFormat: (parseStringOrNone(msg.params['video format']) ?? null) as VideoFormat | null,
 			loop: parseBool(msg.params['loop']),
+			inputVideoFormat: parseStringOrNone(msg.params['input video format']) as VideoFormat | null | undefined,
 		}
 
 		if (msg.params['active slot'] && !res.slotId) {

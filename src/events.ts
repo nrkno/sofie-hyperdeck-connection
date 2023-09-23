@@ -42,8 +42,9 @@ export interface TransportInfoChangeResponse {
 	singleClip?: boolean
 	displayTimecode?: string
 	timecode?: string
-	videoFormat?: VideoFormat
+	videoFormat?: VideoFormat | null
 	loop?: boolean
+	inputVideoFormat?: VideoFormat | null
 }
 
 export interface TimelinePositionChangeResponse {

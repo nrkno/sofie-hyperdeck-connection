@@ -2,7 +2,7 @@ import { SynchronousCode } from '../codes'
 import { TransportStatus, VideoFormat } from '../enums'
 import { ResponseMessage, NamedMessage } from '../message'
 import { AbstractCommand } from './abstractCommand'
-import { parseIdOrNone, parseBool } from '../util'
+import { parseIdOrNone, parseBool, parseStringOrNone } from '../util'
 
 export interface TransportInfoCommandResponse {
 	status: TransportStatus
@@ -12,8 +12,10 @@ export interface TransportInfoCommandResponse {
 	singleClip: boolean
 	displayTimecode: string
 	timecode: string
-	videoFormat: VideoFormat
+	videoFormat: VideoFormat | null
 	loop: boolean
+	/** Only for newer models */
+	inputVideoFormat: VideoFormat | null
 }
 
 export class TransportInfoCommand extends AbstractCommand<TransportInfoCommandResponse> {
@@ -28,8 +30,9 @@ export class TransportInfoCommand extends AbstractCommand<TransportInfoCommandRe
 			singleClip: parseBool(msg.params['single clip']) || false,
 			displayTimecode: msg.params['display timecode'],
 			timecode: msg.params['timecode'],
-			videoFormat: msg.params['video format'] as VideoFormat,
+			videoFormat: (parseStringOrNone(msg.params['video format']) ?? null) as VideoFormat | null,
 			loop: parseBool(msg.params['loop']) || false,
+			inputVideoFormat: (parseStringOrNone(msg.params['input video format']) || null) as VideoFormat | null,
 		}
 		return res
 	}
