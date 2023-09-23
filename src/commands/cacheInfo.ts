@@ -8,7 +8,7 @@ export interface CacheInfoCommandResponse {
 	recordingTime: number
 }
 
-export class CacheInfoGetCommand extends AbstractCommand {
+export class CacheInfoGetCommand extends AbstractCommand<CacheInfoCommandResponse> {
 	expectedResponseCode = SynchronousCode.CacheInfo
 
 	deserialize(msg: ResponseMessage): CacheInfoCommandResponse {

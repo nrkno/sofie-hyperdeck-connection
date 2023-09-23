@@ -7,7 +7,7 @@ export interface DynamicRangeCommandResponse {
 	playbackOverride: DynamicRange
 }
 
-export class DynamicRangeGetCommand extends AbstractCommand {
+export class DynamicRangeGetCommand extends AbstractCommand<DynamicRangeCommandResponse> {
 	expectedResponseCode = SynchronousCode.DynamicRange
 
 	deserialize(msg: ResponseMessage): DynamicRangeCommandResponse {

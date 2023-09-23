@@ -8,7 +8,7 @@ export interface RemoteInfoCommandResponse {
 	override?: boolean
 }
 
-export class RemoteGetCommand extends AbstractCommand {
+export class RemoteGetCommand extends AbstractCommand<RemoteInfoCommandResponse> {
 	expectedResponseCode = SynchronousCode.RemoteInfo
 
 	deserialize(msg: ResponseMessage): RemoteInfoCommandResponse {

@@ -18,7 +18,7 @@ export interface ClipsCountCommandResponse {
 	count: number
 }
 
-export class ClipsGetCommand extends AbstractCommand {
+export class ClipsGetCommand extends AbstractCommand<ClipsGetCommandResponse> {
 	expectedResponseCode = SynchronousCode.ClipsGet
 
 	constructor(public clip?: number, public count?: number, public readonly version?: 1 | 2) {
@@ -69,7 +69,7 @@ export class ClipsGetCommand extends AbstractCommand {
 	}
 }
 
-export class ClipsCountCommand extends AbstractCommand {
+export class ClipsCountCommand extends AbstractCommand<ClipsCountCommandResponse> {
 	expectedResponseCode = SynchronousCode.ClipsCount
 
 	deserialize(msg: ResponseMessage): ClipsCountCommandResponse {

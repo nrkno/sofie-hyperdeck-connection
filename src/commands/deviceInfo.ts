@@ -8,7 +8,7 @@ export interface DeviceInfoCommandResponse {
 	slots: string
 }
 
-export class DeviceInfoCommand extends AbstractCommand {
+export class DeviceInfoCommand extends AbstractCommand<DeviceInfoCommandResponse> {
 	expectedResponseCode = SynchronousCode.DeviceInfo
 
 	deserialize(msg: ResponseMessage): DeviceInfoCommandResponse {

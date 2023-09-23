@@ -7,7 +7,7 @@ export interface FormatCommandResponse {
 	code: string
 }
 
-export class FormatCommand extends AbstractCommand {
+export class FormatCommand extends AbstractCommand<FormatCommandResponse> {
 	expectedResponseCode = SynchronousCode.FormatReady
 
 	filesystem?: FilesystemFormat

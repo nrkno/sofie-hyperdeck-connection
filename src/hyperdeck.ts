@@ -14,11 +14,11 @@ export interface HyperdeckOptions {
 	externalLog?: (arg0?: any, arg1?: any, arg2?: any, arg3?: any) => void
 }
 
-class QueuedCommand {
-	public readonly promise: Promise<any>
-	public readonly command: AbstractCommand
+class QueuedCommand<TResponse> {
+	public readonly promise: Promise<TResponse>
+	public readonly command: AbstractCommand<TResponse>
 
-	constructor(command: AbstractCommand) {
+	constructor(command: AbstractCommand<TResponse>) {
 		this.command = command
 		this.promise = new Promise((resolve, reject) => {
 			this.resolve = resolve
@@ -26,7 +26,7 @@ class QueuedCommand {
 		})
 	}
 
-	resolve(_res: any) {
+	resolve(_res: TResponse) {
 		throw new Error('No promise to resolve')
 	}
 	reject(_res: any) {
@@ -43,7 +43,7 @@ export class Hyperdeck extends EventEmitter {
 	private _connected = false
 	private _retryConnectTimeout: NodeJS.Timer | null = null
 	private _log: (...args: any[]) => void
-	private _commandQueue: QueuedCommand[] = []
+	private _commandQueue: QueuedCommand<any>[] = []
 	private _pingPeriod = 5000
 	private _pingInterval: NodeJS.Timer | null = null
 	private _lastCommandTime = 0
@@ -125,7 +125,7 @@ export class Hyperdeck extends EventEmitter {
 		}
 	}
 
-	async sendCommand(command: AbstractCommand): Promise<any> {
+	async sendCommand<TResponse>(command: AbstractCommand<TResponse>): Promise<TResponse> {
 		if (!this._connected) return Promise.reject()
 
 		const res = this._queueCommand(command)
@@ -169,7 +169,7 @@ export class Hyperdeck extends EventEmitter {
 	private _connectInner(): void {
 		this._commandQueue = []
 		this._queueCommand(new DummyConnectCommand())
-			.then((c) => {
+			.then(async (c) => {
 				// TODO - we can filter supported versions here. for now we shall not as it is likely that there will not be any issues
 				// if (c.protocolVersion !== 1.6) {
 				// 	throw new Error('unknown protocol version: ' + c.protocolVersion)
@@ -247,13 +247,13 @@ export class Hyperdeck extends EventEmitter {
 		}
 	}
 
-	private async _queueCommand(command: AbstractCommand): Promise<any> {
+	private async _queueCommand<TResponse>(command: AbstractCommand<TResponse>): Promise<TResponse> {
 		const cmdWrapper = new QueuedCommand(command)
 		this._commandQueue.push(cmdWrapper)
 		return cmdWrapper.promise
 	}
 
-	private _sendCommand(command: QueuedCommand): boolean {
+	private _sendCommand(command: QueuedCommand<any>): boolean {
 		const msg = command.command.serialize()
 		if (msg === null) return false
 

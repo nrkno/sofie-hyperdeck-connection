@@ -7,7 +7,7 @@ export interface PlayOnStartupCommandResponse {
 	singleClip: boolean
 }
 
-export class PlayOnStartupGetCommand extends AbstractCommand {
+export class PlayOnStartupGetCommand extends AbstractCommand<PlayOnStartupCommandResponse> {
 	expectedResponseCode = SynchronousCode.Playrange
 
 	deserialize(msg: ResponseMessage): PlayOnStartupCommandResponse {

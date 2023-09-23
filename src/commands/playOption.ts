@@ -6,7 +6,7 @@ export interface PlayOptionCommandResponse {
 	stopMode: 'lastframe' | 'nextframe' | 'black'
 }
 
-export class PlayOptionGetCommand extends AbstractCommand {
+export class PlayOptionGetCommand extends AbstractCommand<PlayOptionCommandResponse> {
 	expectedResponseCode = SynchronousCode.PlayOption
 
 	deserialize(msg: ResponseMessage): PlayOptionCommandResponse {

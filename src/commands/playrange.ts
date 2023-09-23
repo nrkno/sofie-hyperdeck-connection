@@ -7,7 +7,7 @@ export interface PlayrangeCommandResponse {
 	timelineOut: string
 }
 
-export class PlayrangeGetCommand extends AbstractCommand {
+export class PlayrangeGetCommand extends AbstractCommand<PlayrangeCommandResponse> {
 	expectedResponseCode = SynchronousCode.Playrange
 
 	deserialize(msg: ResponseMessage): PlayrangeCommandResponse {

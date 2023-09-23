@@ -27,7 +27,7 @@ export interface DiskListCommandResponse {
 	clips: Clip[]
 }
 
-export class DiskListCommand extends AbstractCommand {
+export class DiskListCommand extends AbstractCommand<DiskListCommandResponse> {
 	expectedResponseCode = SynchronousCode.DiskList
 	slot?: string
 

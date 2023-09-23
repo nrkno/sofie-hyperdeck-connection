@@ -4,7 +4,7 @@ import { AbstractCommand, AbstractCommandNoResponse } from './abstractCommand'
 import { ConnectionInfoResponse } from './connect'
 
 // Purpose of this is to emit the connect event with the connectionInfo
-export class DummyConnectCommand extends AbstractCommand {
+export class DummyConnectCommand extends AbstractCommand<ConnectionInfoResponse> {
 	expectedResponseCode = AsynchronousCode.ConnectionInfo
 
 	deserialize(msg: ResponseMessage): ConnectionInfoResponse {

@@ -17,7 +17,7 @@ export interface NotifyCommandResponse {
 	dynamicRange?: boolean
 }
 
-export class NotifyGetCommand extends AbstractCommand {
+export class NotifyGetCommand extends AbstractCommand<NotifyCommandResponse> {
 	expectedResponseCode = SynchronousCode.Notify
 
 	deserialize(msg: ResponseMessage): NotifyCommandResponse {

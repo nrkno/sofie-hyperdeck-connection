@@ -16,7 +16,7 @@ export interface ConfigurationCommandResponse {
 	appendTimestamp?: boolean
 }
 
-export class ConfigurationGetCommand extends AbstractCommand {
+export class ConfigurationGetCommand extends AbstractCommand<ConfigurationCommandResponse> {
 	expectedResponseCode = SynchronousCode.Configuration
 
 	deserialize(msg: ResponseMessage): ConfigurationCommandResponse {
