@@ -1,24 +1,13 @@
-import { TransportStatus, SlotId, VideoFormat } from '../enums'
+import { TransportStatus, VideoFormat } from '../enums'
 import { ResponseMessage } from '../message'
 import { parseIdOrNone, parseIntIfDefined, parseBool } from '../util'
 import { IHandler } from './iHandler'
 import { AsynchronousCode } from '../codes'
+import { TransportInfoChangeResponse } from '../events'
 
-export interface TransportInfoChangeResponse {
-	status?: TransportStatus
-	speed?: number
-	slotId?: SlotId | null
-	clipId?: number | null
-	singleClip?: boolean
-	displayTimecode?: string
-	timecode?: string
-	videoFormat?: VideoFormat
-	loop?: boolean
-}
-
-export class TransportInfoChange implements IHandler {
+export class TransportInfoChange implements IHandler<'notify.transport'> {
 	responseCode = AsynchronousCode.TransportInfo
-	eventName = 'notify.transport'
+	eventName = 'notify.transport' as const
 
 	deserialize(msg: ResponseMessage): TransportInfoChangeResponse {
 		const res: TransportInfoChangeResponse = {

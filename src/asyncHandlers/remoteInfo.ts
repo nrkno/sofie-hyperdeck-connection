@@ -2,14 +2,11 @@ import { ResponseMessage } from '../message'
 import { parseBool } from '../util'
 import { IHandler } from './iHandler'
 import { AsynchronousCode } from '../codes'
+import { RemoteInfoChangeResponse } from '../events'
 
-export interface RemoteInfoChangeResponse {
-	enabled?: boolean
-}
-
-export class RemoteInfoChange implements IHandler {
+export class RemoteInfoChange implements IHandler<'notify.remote'> {
 	responseCode = AsynchronousCode.RemoteInfo
-	eventName = 'notify.remote'
+	eventName = 'notify.remote' as const
 
 	deserialize(msg: ResponseMessage): RemoteInfoChangeResponse {
 		const res: RemoteInfoChangeResponse = {

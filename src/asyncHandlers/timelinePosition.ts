@@ -1,14 +1,11 @@
 import { ResponseMessage } from '../message'
 import { IHandler } from './iHandler'
 import { AsynchronousCode } from '../codes'
+import { TimelinePositionChangeResponse } from '../events'
 
-export interface TimelinePositionChangeResponse {
-	timelinePosition: string
-}
-
-export class TimelinePositionChange implements IHandler {
+export class TimelinePositionChange implements IHandler<'notify.timelinePosition'> {
 	responseCode = AsynchronousCode.TimelinePosition
-	eventName = 'notify.timelinePosition'
+	eventName = 'notify.timelinePosition' as const
 
 	deserialize(msg: ResponseMessage): TimelinePositionChangeResponse {
 		const res: TimelinePositionChangeResponse = {

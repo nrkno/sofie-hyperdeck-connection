@@ -82,6 +82,7 @@
     "source"
   ],
   "dependencies": {
+    "eventemitter3": "^4.0.7",
     "tslib": "^2.6.2"
   },
   "prettier": "@sofie-automation/code-standard-preset/.prettierrc.json",
