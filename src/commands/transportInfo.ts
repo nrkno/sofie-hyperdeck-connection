@@ -1,5 +1,5 @@
 import { SynchronousCode } from '../codes'
-import { TransportStatus, SlotId, VideoFormat } from '../enums'
+import { TransportStatus, VideoFormat } from '../enums'
 import { ResponseMessage, NamedMessage } from '../message'
 import { AbstractCommand } from './abstractCommand'
 import { parseIdOrNone, parseBool } from '../util'
@@ -7,7 +7,7 @@ import { parseIdOrNone, parseBool } from '../util'
 export interface TransportInfoCommandResponse {
 	status: TransportStatus
 	speed: number
-	slotId: SlotId | null
+	slotId: number | null
 	clipId: number | null
 	singleClip: boolean
 	displayTimecode: string

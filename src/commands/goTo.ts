@@ -2,7 +2,12 @@ import { NamedMessage } from '../message'
 import { AbstractCommandNoResponse } from './abstractCommand'
 
 export class GoToCommand extends AbstractCommandNoResponse {
-	constructor(public clip?: string, public clipId?: number, public timecode?: string, public timeline?: number) {
+	constructor(
+		public clip?: string,
+		public clipId?: string | number, // Relative offsets, start and end are allowed
+		public timecode?: string,
+		public timeline?: number
+	) {
 		super()
 	}
 

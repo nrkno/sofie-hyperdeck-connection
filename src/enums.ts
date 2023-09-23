@@ -9,11 +9,6 @@ export enum TransportStatus {
 	RECORD = 'record',
 }
 
-export enum SlotId {
-	ONE = 1,
-	TWO = 2,
-}
-
 export enum SlotStatus {
 	EMPTY = 'empty',
 	MOUNTING = 'mounting',

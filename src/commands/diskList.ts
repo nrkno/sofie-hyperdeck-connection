@@ -1,5 +1,4 @@
 import { SynchronousCode } from '../codes'
-import { SlotId } from '../enums'
 import { NamedMessage, ResponseMessage } from '../message'
 import { AbstractCommand } from './abstractCommand'
 
@@ -9,7 +8,7 @@ const timecodeRegex = /(?<hours>\d+):(?<minutes>\d+):(?<seconds>\d+):(?<frames>\
 
 export interface Clip {
 	/** 1, 2, 3, etc */
-	clipId: string
+	clipId: number
 	/** ExampleVideo.mov, etc */
 	name: string
 	/** QuickTimeProRes, etc */
@@ -23,7 +22,7 @@ export interface Clip {
 }
 
 export interface DiskListCommandResponse {
-	slotId: SlotId
+	slotId: number
 	clips: Clip[]
 }
 
@@ -67,7 +66,7 @@ export class DiskListCommand extends AbstractCommand<DiskListCommandResponse> {
 					const secondsMs = parseInt(timecodeMatch.groups.seconds, 10) * 1000
 					const framesMs = parseInt(timecodeMatch.groups.frames) * msPerFrame
 					const clip: Clip = {
-						clipId: x,
+						clipId: Number(x),
 						name: match.groups.fileName,
 						codec: match.groups.codec,
 						format: match.groups.format,

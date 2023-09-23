@@ -1,5 +1,5 @@
 import { ConnectionInfoResponse } from './commands/connect'
-import { SlotId, SlotStatus, TransportStatus, VideoFormat } from './enums'
+import { SlotStatus, TransportStatus, VideoFormat } from './enums'
 
 export interface HyperdeckEvents extends HyperdeckAsyncEvents {
 	error: [message: string, error: Error | unknown]
@@ -37,7 +37,7 @@ export interface ConfigurationChangeResponse {
 export interface TransportInfoChangeResponse {
 	status?: TransportStatus
 	speed?: number
-	slotId?: SlotId | null
+	slotId?: number | null
 	clipId?: number | null
 	singleClip?: boolean
 	displayTimecode?: string
@@ -51,7 +51,7 @@ export interface TimelinePositionChangeResponse {
 }
 
 export interface SlotInfoChangeResponse {
-	slotId: SlotId
+	slotId: number
 	status?: SlotStatus
 	volumeName?: string
 	recordingTime?: number

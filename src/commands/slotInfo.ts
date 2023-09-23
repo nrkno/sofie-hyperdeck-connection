@@ -1,10 +1,10 @@
 import { SynchronousCode } from '../codes'
-import { SlotId, VideoFormat, SlotStatus } from '../enums'
+import { VideoFormat, SlotStatus } from '../enums'
 import { ResponseMessage, NamedMessage } from '../message'
 import { AbstractCommand } from './abstractCommand'
 
 export interface SlotInfoCommandResponse {
-	slotId: SlotId
+	slotId: number
 	status: SlotStatus
 	volumeName: string
 	recordingTime: number
