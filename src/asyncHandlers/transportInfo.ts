@@ -13,7 +13,7 @@ export class TransportInfoChange implements IHandler<'notify.transport'> {
 		const res: TransportInfoChangeResponse = {
 			status: msg.params['status'] as TransportStatus,
 			speed: parseIntIfDefined(msg.params['speed']),
-			slotId: parseIdOrNone(msg.params['slot id']),
+			slotId: parseIdOrNone(msg.params['active slot'] || msg.params['slot id']),
 			clipId: parseIdOrNone(msg.params['clip id']),
 			singleClip: parseBool(msg.params['single clip']),
 			displayTimecode: msg.params['display timecode'],
