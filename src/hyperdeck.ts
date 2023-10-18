@@ -1,12 +1,12 @@
-import { EventEmitter } from 'events'
 import { Socket } from 'net'
-
+import EventEmitter = require('eventemitter3')
 import { ResponseCodeType, GetResponseCodeType, AsynchronousCode } from './codes'
 import { AbstractCommand } from './commands'
 import * as AsyncHandlers from './asyncHandlers'
 import { ResponseMessage } from './message'
 import { DummyConnectCommand, WatchdogPeriodCommand, PingCommand, QuitCommand } from './commands/internal'
 import { buildMessageStr, MultilineParser } from './parser'
+import { HyperdeckAsyncEvents, HyperdeckEvents } from './events'
 
 export interface HyperdeckOptions {
 	pingPeriod?: number // set to 0 to disable
@@ -34,7 +34,7 @@ class QueuedCommand<TResponse> {
 	}
 }
 
-export class Hyperdeck extends EventEmitter {
+export class Hyperdeck extends EventEmitter<HyperdeckEvents> {
 	DEFAULT_PORT = 9993
 	RECONNECT_INTERVAL = 5000
 	DEBUG = false
@@ -47,7 +47,7 @@ export class Hyperdeck extends EventEmitter {
 	private _pingPeriod = 5000
 	private _pingInterval: NodeJS.Timer | null = null
 	private _lastCommandTime = 0
-	private _asyncHandlers: { [key: number]: AsyncHandlers.IHandler } = {}
+	private _asyncHandlers: { [key: number]: AsyncHandlers.IHandler<keyof HyperdeckAsyncEvents> } = {}
 	private _parser: MultilineParser
 
 	private _connectionActive = false // True when connected/connecting/reconnecting
@@ -73,7 +73,7 @@ export class Hyperdeck extends EventEmitter {
 		this.socket.setEncoding('utf8')
 		this.socket.on('error', (e) => {
 			if (this._connectionActive) {
-				this.emit('error', e)
+				this.emit('error', 'socket error', e)
 			}
 		})
 		this.socket.on('close', () => {
@@ -91,7 +91,7 @@ export class Hyperdeck extends EventEmitter {
 
 		for (const h in AsyncHandlers) {
 			try {
-				const handler: AsyncHandlers.IHandler = new (AsyncHandlers as any)[h]()
+				const handler: AsyncHandlers.IHandler<keyof HyperdeckAsyncEvents> = new (AsyncHandlers as any)[h]()
 				this._asyncHandlers[handler.responseCode] = handler
 			} catch (e) {
 				// ignore as likely not a class
@@ -189,7 +189,7 @@ export class Hyperdeck extends EventEmitter {
 								if (this.connected)
 									this._performPing().catch((e) => {
 										if (this._connectionActive) {
-											this.emit('error', e)
+											this.emit('error', 'ping failure', e)
 										}
 									})
 							}, this._pingPeriod)
@@ -199,9 +199,9 @@ export class Hyperdeck extends EventEmitter {
 
 				return c
 			})
-			.then((c) => {
+			.then((info) => {
 				this._connected = true
-				this.emit('connected', c)
+				this.emit('connected', info)
 			})
 			.catch((e) => {
 				this._connected = false
@@ -320,7 +320,7 @@ export class Hyperdeck extends EventEmitter {
 
 		const h = this._asyncHandlers[msg.code]
 		if (h) {
-			this.emit(h.eventName, h.deserialize(msg))
+			this.emit(h.eventName, h.deserialize(msg) as any)
 		} else {
 			this._log('unknown async response:', msg)
 		}

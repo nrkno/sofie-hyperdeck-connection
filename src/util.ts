@@ -12,6 +12,12 @@ export function parseIdOrNone(str: string | undefined): number | null | undefine
 	return parseInt(str, 10)
 }
 
+export function parseStringOrNone(str: string | undefined): string | null | undefined {
+	if (str === undefined) return undefined
+	if (str === 'none') return null
+	return str
+}
+
 export function parseIntIfDefined(str: string | undefined): number | undefined {
 	if (str === undefined) return undefined
 	return parseInt(str, 10)

@@ -3,7 +3,7 @@ import { NamedMessage, ResponseMessage } from '../message'
 import { AbstractCommand, AbstractCommandNoResponse } from './abstractCommand'
 
 export interface ClipInfo {
-	clipId: string
+	clipId: number
 	name: string
 	startTime: string
 	duration: string
@@ -30,7 +30,7 @@ export class ClipsGetCommand extends AbstractCommand<ClipsGetCommandResponse> {
 		const clips = clipIds.map<ClipInfo>((x) => {
 			if (this.version === 2) {
 				return {
-					clipId: x,
+					clipId: Number(x),
 					name: msg.params[x].substr(48),
 					startTime: msg.params[x].substr(0, 11),
 					duration: msg.params[x].substr(12, 11),
@@ -40,7 +40,7 @@ export class ClipsGetCommand extends AbstractCommand<ClipsGetCommandResponse> {
 			} else {
 				// v1
 				return {
-					clipId: x,
+					clipId: Number(x),
 					name: msg.params[x].slice(0, -24),
 					startTime: msg.params[x].substr(-23, 11),
 					duration: msg.params[x].substr(-11, 11),

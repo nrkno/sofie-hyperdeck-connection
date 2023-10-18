@@ -3,7 +3,7 @@ import { NamedMessage } from '../message'
 import { VideoFormat } from '../enums'
 
 export class SlotSelectCommand extends AbstractCommandNoResponse {
-	slotId?: string
+	slotId?: number
 	format?: VideoFormat
 
 	serialize(): NamedMessage {
@@ -13,7 +13,7 @@ export class SlotSelectCommand extends AbstractCommandNoResponse {
 		}
 
 		if (this.slotId) {
-			res.params['slot id'] = this.slotId
+			res.params['slot id'] = this.slotId + ''
 		}
 		if (this.format) {
 			res.params['video format'] = this.format
