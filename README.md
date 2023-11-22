@@ -1,11 +1,20 @@
-# Sofie: The Modern TV News Studio Automation System (Hyperdeck Connection Library)
-
+# Sofie HyperDeck Connection Library
 [![CircleCI](https://circleci.com/gh/nrkno/sofie-hyperdeck-connection.svg?style=svg)](https://circleci.com/gh/nrkno/sofie-hyperdeck-connection)
 [![codecov](https://codecov.io/gh/nrkno/sofie-hyperdeck-connection/branch/master/graph/badge.svg)](https://codecov.io/gh/nrkno/sofie-hyperdeck-connection)
 
-This library is used in the [**Sofie** TV News Studio Automation System](https://github.com/nrkno/Sofie-TV-automation/) for connecting to Blackmagic Design Hyperdeck devices.
+This is the _HyperDeck Connection_ library of the [**Sofie** TV Automation System](https://github.com/nrkno/Sofie-TV-automation/), used for connecting to Blackmagic Design's _HyperDeck_ devices.
 
-## Technology highlights
+### Repository-specific Info for Developers
+* [Developer Info](DEVELOPER.md)
+* [Contribution Guidelines](CONTRIBUTING.md)
+
+### General Sofie System Info
+* [Documentation](https://nrkno.github.io/sofie-core/)
+* [Releases](https://nrkno.github.io/sofie-core/releases)
+
+---
+
+## Technology Highlights
 
 - Typescript
 - Yarn
@@ -80,3 +89,7 @@ This module will run tests by jest.
 ```sh
 $ yarn unit
 ```
+
+---
+
+_The NRK logo is a registered trademark of Norsk rikskringkasting AS. The license does not grant any right to use, in any way, any trademarks, service marks or logos of Norsk rikskringkasting AS._
