@@ -5,9 +5,9 @@
 This is the _HyperDeck Connection_ library of the [**Sofie** TV Automation System](https://github.com/nrkno/Sofie-TV-automation/), used for connecting to Blackmagic Design's _HyperDeck_ devices.
 
 
-## General Sofie System Info
-* [Documentation](https://nrkno.github.io/sofie-core/)
-* [Releases](https://nrkno.github.io/sofie-core/releases)
+## General Sofie System Information
+* [_Sofie_ Documentation](https://nrkno.github.io/sofie-core/)
+* [_Sofie_ Releases](https://nrkno.github.io/sofie-core/releases)
 * [Contribution Guidelines](CONTRIBUTING.md)
 * [License](LICENSE)
 
