@@ -1,6 +1,6 @@
 {
   "name": "hyperdeck-connection",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Typescript Node.js library for connecting with a BlackmagicDesign's HyperDeck devices.",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

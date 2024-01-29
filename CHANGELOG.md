@@ -2,9 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [Convential Commits](https://www.conventionalcommits.org/en/v1.0.0/#specification) for commit guidelines.
 
+## [2.0.0](https://github.com/nrkno/sofie-hyperdeck-connection/compare/v1.0.0...v2.0.0) (Mon Jan 29 2024)
+
+## Breaking changes
+
+### Features
+
+- **!** remove incorrect SlotId enum [930702d](https://github.com/nrkno/sofie-hyperdeck-connection/commit/930702daac61b9bb59509d138dde49f36e63bc9b)
+
+### Fixes
+
+- don't reject without an error [c8d9d31](https://github.com/nrkno/sofie-hyperdeck-connection/commit/c8d9d31b4d99b526cdea3974cbd97e6b285464ed)
+- parse slotId correctly in notify.transport messages #12 [07905d7](https://github.com/nrkno/sofie-hyperdeck-connection/commit/07905d7507a4586b8b57f2cb712506006b25755f)
+- account for how fractional frame rates are expressed in the timecode [e6f77be](https://github.com/nrkno/sofie-hyperdeck-connection/commit/e6f77be12aa327113501bc46604789329f0868c2)
+- account for how drop-frame content is expressed in the timecode [90858ff](https://github.com/nrkno/sofie-hyperdeck-connection/commit/90858fff7118ea3968a58f65904f239efc1336f6)
+- interlaced frame counting [9455421](https://github.com/nrkno/sofie-hyperdeck-connection/commit/9455421772b37c22c31342d335be6116ba17bf90)
+- parse all clip info from the "disk list" command into separate fields [8d2dcb9](https://github.com/nrkno/sofie-hyperdeck-connection/commit/8d2dcb93e71c9aa1fba278bd1914ff03dcf941d6)
+
+### Features
+
+- add missing video formats [eae2185](https://github.com/nrkno/sofie-hyperdeck-connection/commit/eae2185fdf4d8b4321ee2f3cd588f36762b69b25)
+- add inputVideoFormat to TransportInfoState [af392d0](https://github.com/nrkno/sofie-hyperdeck-connection/commit/af392d0ce409a7efcc9f75cd25e47d8386e39156)
+- make event types be strongly defined [93e7573](https://github.com/nrkno/sofie-hyperdeck-connection/commit/93e7573062b2f82d9235c1b58c5cb896178060af)
+- make `sendCommand` response Promise be typed [fb7a34b](https://github.com/nrkno/sofie-hyperdeck-connection/commit/fb7a34bda966022b96b6f2c382aae850a4a0ec9a)
+
 ## [1.0.0](https://github.com/nrkno/sofie-hyperdeck-connection/compare/0.5.0...v1.0.0) (2022-11-21)
 
 ### Breaking Changes
+
 —
 
 ### Features
