@@ -126,7 +126,7 @@ export class Hyperdeck extends EventEmitter<HyperdeckEvents> {
 	}
 
 	async sendCommand<TResponse>(command: AbstractCommand<TResponse>): Promise<TResponse> {
-		if (!this._connected) return Promise.reject()
+		if (!this._connected) return Promise.reject(new Error('Hyperdeck not connected'))
 
 		const res = this._queueCommand(command)
 		this._logDebug('queued:', this._commandQueue.length)
