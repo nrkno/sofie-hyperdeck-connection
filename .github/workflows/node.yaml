@@ -61,11 +61,10 @@ jobs:
         env:
           CI: true
       - name: Send coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: matrix.node-version == '14.x'
-        with:
-          fail_ci_if_error: true
-          # name: codecov-umbrella
       - name: Check docs generation
         if: matrix.node-version == '14.x'
         run: |
