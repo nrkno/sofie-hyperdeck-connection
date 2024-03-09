@@ -5,24 +5,24 @@ import { AbstractCommand } from './abstractCommand'
 export interface DeviceInfoCommandResponse {
 	protocolVersion: number
 	model: string
-	slots: string
+	slots: number
 }
 
-export class DeviceInfoCommand extends AbstractCommand {
+export class DeviceInfoCommand extends AbstractCommand<DeviceInfoCommandResponse> {
 	expectedResponseCode = SynchronousCode.DeviceInfo
 
-	deserialize (msg: ResponseMessage) {
+	deserialize(msg: ResponseMessage): DeviceInfoCommandResponse {
 		const res: DeviceInfoCommandResponse = {
 			protocolVersion: parseFloat(msg.params['protocol version']),
 			model: msg.params['model'],
-			slots: msg.params['slot count']
+			slots: Number(msg.params['slot count']),
 		}
 		return res
 	}
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'device info',
-			params: {}
+			params: {},
 		}
 
 		return res

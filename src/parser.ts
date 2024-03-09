@@ -1,14 +1,13 @@
-import * as _ from 'underscore'
 import { ResponseMessage, NamedMessage } from './message'
 import { SynchronousCode } from './codes'
 
-export function buildMessageStr (msg: NamedMessage) {
-	if (_.isEmpty(msg.params)) {
+export function buildMessageStr(msg: NamedMessage): string {
+	if (Object.keys(msg.params).length === 0) {
 		return msg.name + '\r\n'
 	}
 
 	let str = msg.name + ':\r\n'
-	_.forEach(msg.params, (v, k) => {
+	Object.entries<string>(msg.params).forEach(([k, v]) => {
 		str += k + ': ' + v + '\r\n'
 	})
 
@@ -20,12 +19,12 @@ export class MultilineParser {
 	private _log: (...args: any[]) => void
 	private _linesQueue: string[] = []
 
-	constructor (debug: boolean, log: (...args: any[]) => void) {
+	constructor(debug: boolean, log: (...args: any[]) => void) {
 		this._debug = debug
 		this._log = log
 	}
 
-	receivedString (data: string): ResponseMessage[] {
+	receivedString(data: string): ResponseMessage[] {
 		const res: ResponseMessage[] = []
 
 		// add new lines to processing queue
@@ -48,8 +47,9 @@ export class MultilineParser {
 				const r = this.parseResponse(this._linesQueue.splice(0, 1))
 				if (r) {
 					res.push(r)
-					if (r.code === SynchronousCode.FormatReady) { // edge case, where response has no header:
-						r.params['code'] = this._linesQueue.shift()!
+					if (r.code === SynchronousCode.FormatReady) {
+						// edge case, where response has no header:
+						r.params['code'] = this._linesQueue.shift() as string
 					}
 				}
 				continue
@@ -69,8 +69,8 @@ export class MultilineParser {
 		return res
 	}
 
-	parseResponse (lines: string[]): ResponseMessage | null {
-		lines = lines.map(l => l.trim())
+	parseResponse(lines: string[]): ResponseMessage | null {
+		lines = lines.map((l) => l.trim())
 
 		const headerMatch = lines[0].match(/^(\d+) (.+?)(:|)$/im)
 		if (!headerMatch) {
@@ -100,7 +100,7 @@ export class MultilineParser {
 		const res: ResponseMessage = {
 			code: code,
 			name: msg,
-			params: params
+			params: params,
 		}
 		return res
 	}

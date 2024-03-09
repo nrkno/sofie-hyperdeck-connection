@@ -2,26 +2,24 @@ import { NamedMessage } from '../message'
 import { AbstractCommandNoResponse } from './abstractCommand'
 
 export class GoToCommand extends AbstractCommandNoResponse {
-	clip?: string
-	clipId?: number
-	timecode?: string
-
-	constructor (clip?: string, clipId?: number, timecode?: string) {
+	constructor(
+		public clip?: string,
+		public clipId?: string | number, // Relative offsets, start and end are allowed
+		public timecode?: string,
+		public timeline?: number
+	) {
 		super()
-
-		this.clip = clip
-		this.clipId = clipId
-		this.timecode = timecode
 	}
 
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'goto',
-			params: {}
+			params: {},
 		}
 
 		if (this.clip !== undefined) res.params.clip = this.clip
 		if (this.clipId !== undefined) res.params['clip id'] = this.clipId + ''
+		if (this.timeline !== undefined) res.params.timeline = this.timeline + ''
 		if (this.timecode !== undefined) res.params.timecode = this.timecode
 
 		if (Object.keys(res.params).length === 0) {

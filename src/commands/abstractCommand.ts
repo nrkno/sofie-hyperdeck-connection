@@ -1,20 +1,19 @@
 import { ResponseCode, SynchronousCode } from '../codes'
 import { ResponseMessage, NamedMessage } from '../message'
 
-export interface ErrorResponse extends ResponseMessage {
-}
+export type ErrorResponse = ResponseMessage
 
-export abstract class AbstractCommand {
+export abstract class AbstractCommand<TResponse> {
 	abstract expectedResponseCode: ResponseCode
 
-	abstract deserialize (msg: ResponseMessage): any
-	abstract serialize (): NamedMessage | null
+	abstract deserialize(msg: ResponseMessage): TResponse
+	abstract serialize(): NamedMessage | null
 }
 
-export abstract class AbstractCommandNoResponse extends AbstractCommand {
+export abstract class AbstractCommandNoResponse extends AbstractCommand<void> {
 	expectedResponseCode = SynchronousCode.OK
 
-	deserialize (msg: ResponseMessage): void {
-		msg = msg
+	deserialize(_msg: ResponseMessage): void {
+		return
 	}
 }

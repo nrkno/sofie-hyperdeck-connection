@@ -6,7 +6,7 @@ export class PlayCommand extends AbstractCommandNoResponse {
 	loop?: boolean
 	singleClip?: boolean
 
-	constructor (speed?: string, loop?: boolean, singleClip?: boolean) {
+	constructor(speed?: string, loop?: boolean, singleClip?: boolean) {
 		super()
 
 		this.speed = speed
@@ -14,10 +14,10 @@ export class PlayCommand extends AbstractCommandNoResponse {
 		this.singleClip = singleClip
 	}
 
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'play',
-			params: {}
+			params: {},
 		}
 
 		if (this.speed !== undefined) res.params.speed = this.speed

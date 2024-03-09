@@ -1,12 +1,12 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { MultilineParser, buildMessageStr } from '../parser'
 import { NamedMessage } from '../message'
 
 describe('Parser', () => {
-
 	test('Parser: response single line', async () => {
 		const msg: NamedMessage = {
 			name: 'some phrase',
-			params: {}
+			params: {},
 		}
 
 		const str = buildMessageStr(msg)
@@ -17,8 +17,8 @@ describe('Parser', () => {
 		const msg: NamedMessage = {
 			name: 'some phrase',
 			params: {
-				'item one': 'val 1'
-			}
+				'item one': 'val 1',
+			},
 		}
 
 		const str = buildMessageStr(msg)
@@ -32,11 +32,9 @@ describe('Parser', () => {
 		const res = parser.parseResponse(rawLines)
 		expect(res).toBeTruthy()
 
-		if (res) {
-			expect(res.code).toEqual(200)
-			expect(res.name).toEqual('ok')
-			expect(res.params).toEqual({})
-		}
+		expect(res!.code).toEqual(200)
+		expect(res!.name).toEqual('ok')
+		expect(res!.params).toEqual({})
 	})
 
 	test('Parser: Broken line', async () => {
@@ -53,22 +51,20 @@ describe('Parser', () => {
 			'prop1: val',
 			'item2: val2',
 			'spaced key: spaced out val',
-			'broken line to be ignored'
+			'broken line to be ignored',
 		]
 
 		const parser = new MultilineParser(false, () => null)
 		const res = parser.parseResponse(rawLines)
 		expect(res).toBeTruthy()
 
-		if (res) {
-			expect(res.code).toEqual(200)
-			expect(res.name).toEqual('spaced name')
-			expect(res.params).toEqual({
-				prop1: 'val',
-				item2: 'val2',
-				'spaced key': 'spaced out val'
-			})
-		}
+		expect(res!.code).toEqual(200)
+		expect(res!.name).toEqual('spaced name')
+		expect(res!.params).toEqual({
+			prop1: 'val',
+			item2: 'val2',
+			'spaced key': 'spaced out val',
+		})
 	})
 
 	test('Parser: Slow stream', async () => {
@@ -96,13 +92,11 @@ describe('Parser', () => {
 		const res = parser.receivedString(rawLines)
 		expect(res[0]).toBeTruthy()
 
-		if (res[0]) {
-			expect(res[0].code).toEqual(216)
-			expect(res[0].name).toEqual('format ready')
-			expect(res[0].params).toEqual({
-				code: 'tgf66k'
-			})
-		}
+		expect(res[0].code).toEqual(216)
+		expect(res[0].name).toEqual('format ready')
+		expect(res[0].params).toEqual({
+			code: 'tgf66k',
+		})
 	})
 
 	test('Parser: Format Command (new)', async () => {
@@ -112,13 +106,10 @@ describe('Parser', () => {
 		const res = parser.parseResponse(rawLines)
 		expect(res).toBeTruthy()
 
-		if (res) {
-			expect(res.code).toEqual(216)
-			expect(res.name).toEqual('format ready')
-			expect(res.params).toEqual({
-				code: 'tgf66k'
-			})
-		}
+		expect(res!.code).toEqual(216)
+		expect(res!.name).toEqual('format ready')
+		expect(res!.params).toEqual({
+			code: 'tgf66k',
+		})
 	})
-
 })

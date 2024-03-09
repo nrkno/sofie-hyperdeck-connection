@@ -1,22 +1,22 @@
 import { EventEmitter } from 'events'
-let setTimeoutOrg = setTimeout
+const setTimeoutOrg = setTimeout
 const sockets: Array<Socket> = []
+// eslint-disable-next-line @typescript-eslint/ban-types
 const onNextSocket: Array<Function> = []
 
 export class Socket extends EventEmitter {
+	public onWrite: ((buff: Buffer, encoding: string) => void) | undefined
+	public onConnect: ((port: number, host: string) => void) | undefined
+	public onClose: (() => void) | undefined
 
-	public onWrite: (buff: Buffer, encoding: string) => void
-	public onConnect: (port: number, host: string) => void
-	public onClose: () => void
+	public expectedWrites: { call: string; response: string }[] = []
 
-	public expectedWrites: { call: string, response: string }[] = []
+	private _connected = false
 
-	private _connected: boolean = false
-
-	constructor () {
+	constructor() {
 		super()
 
-		let cb = onNextSocket.shift()
+		const cb = onNextSocket.shift()
 		if (cb) {
 			cb(this)
 		}
@@ -24,25 +24,25 @@ export class Socket extends EventEmitter {
 		sockets.push(this)
 	}
 
-	public static mockSockets () {
+	public static mockSockets(): Socket[] {
 		return sockets
 	}
-	public static mockOnNextSocket (cb: (s: Socket) => void) {
+	public static mockOnNextSocket(cb: (s: Socket) => void): void {
 		onNextSocket.push(cb)
 	}
 	// this.emit('connect')
 	// this.emit('close')
 	// this.emit('end')
 
-	public setEncoding (enc: string) {
-		enc = enc
+	public setEncoding(_enc: string): void {
+		return
 	}
 
-	public mockExpectedWrite (call: string, response: string) {
+	public mockExpectedWrite(call: string, response: string): void {
 		this.expectedWrites.push({ call, response })
 	}
 
-	public connect (port, host, cb) {
+	public connect(port: number, host: string, cb: () => void): void {
 		if (this.onConnect) this.onConnect(port, host)
 		setTimeoutOrg(() => {
 			if (cb) {
@@ -51,13 +51,13 @@ export class Socket extends EventEmitter {
 
 			this.setConnected()
 		}, 3)
-
 	}
-	public write (buff: Buffer, encoding: string = 'utf8') {
-		expect(this.expectedWrites).not.toHaveLength(0)
+	public write(buff: Buffer, encoding = 'utf8'): void {
+		if (this.expectedWrites.length === 0) throw new Error('Got unexpected write')
 
 		const w = this.expectedWrites.shift()
 		if (w) {
+			// eslint-disable-next-line jest/no-standalone-expect
 			expect(buff).toEqual(w.call)
 			this.emit('data', w.response)
 		}
@@ -66,32 +66,32 @@ export class Socket extends EventEmitter {
 			this.onWrite(buff, encoding)
 		}
 	}
-	public end () {
+	public destroy(): void {
 		this.setEnd()
 		this.setClosed()
 	}
 
-	public mockClose () {
+	public mockClose(): void {
 		this.setClosed()
 	}
-	public mockData (data: Buffer) {
+	public mockData(data: Buffer): void {
 		this.emit('data', data)
 	}
 
-	private setConnected () {
+	private setConnected(): void {
 		if (this._connected !== true) {
 			this._connected = true
 		}
 		this.emit('connect')
 	}
-	private setClosed () {
+	private setClosed(): void {
 		if (this._connected !== false) {
 			this._connected = false
 		}
 		this.emit('close')
 		if (this.onClose) this.onClose()
 	}
-	private setEnd () {
+	private setEnd(): void {
 		if (this._connected !== false) {
 			this._connected = false
 		}

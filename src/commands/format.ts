@@ -7,26 +7,30 @@ export interface FormatCommandResponse {
 	code: string
 }
 
-export class FormatCommand extends AbstractCommand {
+export class FormatCommand extends AbstractCommand<FormatCommandResponse> {
 	expectedResponseCode = SynchronousCode.FormatReady
 
 	filesystem?: FilesystemFormat
+	slotId?: number
+	name?: string
 
-	deserialize (msg: ResponseMessage): FormatCommandResponse {
+	deserialize(msg: ResponseMessage): FormatCommandResponse {
 		return {
-			code: msg.params.code
+			code: msg.params.code,
 		}
 	}
 
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'format',
-			params: {}
+			params: {},
 		}
 
 		if (this.filesystem) {
 			res.params['prepare'] = this.filesystem
 		}
+		if (this.slotId) res.params['slot id'] = this.slotId + ''
+		if (this.name) res.params['name'] = this.name
 
 		return res
 	}
@@ -35,10 +39,10 @@ export class FormatCommand extends AbstractCommand {
 export class FormatConfirmCommand extends AbstractCommandNoResponse {
 	code?: string
 
-	serialize () {
+	serialize(): NamedMessage {
 		const res: NamedMessage = {
 			name: 'format',
-			params: {}
+			params: {},
 		}
 
 		if (this.code) {

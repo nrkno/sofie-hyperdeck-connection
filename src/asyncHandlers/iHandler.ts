@@ -1,9 +1,10 @@
+import { HyperdeckAsyncEvents } from '../events'
 import { AsynchronousCode } from '../codes'
 import { ResponseMessage } from '../message'
 
-export interface IHandler {
+export interface IHandler<TEvent extends keyof HyperdeckAsyncEvents> {
 	responseCode: AsynchronousCode
-	eventName: string
+	eventName: TEvent
 
-	deserialize (msg: ResponseMessage): any
+	deserialize(msg: ResponseMessage): HyperdeckAsyncEvents[TEvent][0]
 }

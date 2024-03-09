@@ -1,12 +1,12 @@
-import { EventEmitter } from 'events'
 import { Socket } from 'net'
-
+import EventEmitter = require('eventemitter3')
 import { ResponseCodeType, GetResponseCodeType, AsynchronousCode } from './codes'
-import { AbstractCommand, ErrorResponse } from './commands'
+import { AbstractCommand } from './commands'
 import * as AsyncHandlers from './asyncHandlers'
 import { ResponseMessage } from './message'
 import { DummyConnectCommand, WatchdogPeriodCommand, PingCommand, QuitCommand } from './commands/internal'
 import { buildMessageStr, MultilineParser } from './parser'
+import { HyperdeckAsyncEvents, HyperdeckEvents } from './events'
 
 export interface HyperdeckOptions {
 	pingPeriod?: number // set to 0 to disable
@@ -14,44 +14,47 @@ export interface HyperdeckOptions {
 	externalLog?: (arg0?: any, arg1?: any, arg2?: any, arg3?: any) => void
 }
 
-class QueuedCommand {
-	public readonly promise: Promise<any>
-	public readonly command: AbstractCommand
+class QueuedCommand<TResponse> {
+	public readonly promise: Promise<TResponse>
+	public readonly command: AbstractCommand<TResponse>
 
-	public resolve: (res: any) => void
-	public reject: (res: ErrorResponse) => void
-
-	constructor (command: AbstractCommand) {
+	constructor(command: AbstractCommand<TResponse>) {
 		this.command = command
 		this.promise = new Promise((resolve, reject) => {
 			this.resolve = resolve
 			this.reject = reject
 		})
 	}
+
+	resolve(_res: TResponse) {
+		throw new Error('No promise to resolve')
+	}
+	reject(_res: any) {
+		throw new Error('No promise to reject')
+	}
 }
 
-export class Hyperdeck extends EventEmitter {
+export class Hyperdeck extends EventEmitter<HyperdeckEvents> {
 	DEFAULT_PORT = 9993
 	RECONNECT_INTERVAL = 5000
 	DEBUG = false
 
-	event: EventEmitter
 	private socket: Socket
-	private _connected: boolean = false
+	private _connected = false
 	private _retryConnectTimeout: NodeJS.Timer | null = null
 	private _log: (...args: any[]) => void
-	private _commandQueue: QueuedCommand[] = []
-	private _pingPeriod: number = 5000
+	private _commandQueue: QueuedCommand<any>[] = []
+	private _pingPeriod = 5000
 	private _pingInterval: NodeJS.Timer | null = null
-	private _lastCommandTime: number = 0
-	private _asyncHandlers: {[key: number]: AsyncHandlers.IHandler} = {}
+	private _lastCommandTime = 0
+	private _asyncHandlers: { [key: number]: AsyncHandlers.IHandler<keyof HyperdeckAsyncEvents> } = {}
 	private _parser: MultilineParser
 
-	private _connectionActive: boolean = false // True when connected/connecting/reconnecting
-	private _host: string
-	private _port: number
+	private _connectionActive = false // True when connected/connecting/reconnecting
+	private _host = ''
+	private _port = this.DEFAULT_PORT
 
-	constructor (options?: HyperdeckOptions) {
+	constructor(options?: HyperdeckOptions) {
 		super()
 
 		this._log = function (...args: any[]): void {
@@ -68,7 +71,11 @@ export class Hyperdeck extends EventEmitter {
 
 		this.socket = new Socket()
 		this.socket.setEncoding('utf8')
-		this.socket.on('error', (e) => this.emit('error', e))
+		this.socket.on('error', (e) => {
+			if (this._connectionActive) {
+				this.emit('error', 'socket error', e)
+			}
+		})
 		this.socket.on('close', () => {
 			if (this._connected) this.emit('disconnected')
 			this._connected = false
@@ -84,7 +91,7 @@ export class Hyperdeck extends EventEmitter {
 
 		for (const h in AsyncHandlers) {
 			try {
-				const handler: AsyncHandlers.IHandler = new (AsyncHandlers as any)[h]()
+				const handler: AsyncHandlers.IHandler<keyof HyperdeckAsyncEvents> = new (AsyncHandlers as any)[h]()
 				this._asyncHandlers[handler.responseCode] = handler
 			} catch (e) {
 				// ignore as likely not a class
@@ -92,7 +99,7 @@ export class Hyperdeck extends EventEmitter {
 		}
 	}
 
-	connect (address: string, port?: number) {
+	connect(address: string, port?: number): void {
 		if (this._connected) return
 		if (this._connectionActive) return
 		this._connectionActive = true
@@ -102,27 +109,24 @@ export class Hyperdeck extends EventEmitter {
 		this._connectInner()
 	}
 
-	disconnect (): Promise<void> {
-		this._connectionActive = false
-		if (this._retryConnectTimeout) {
-			clearTimeout(this._retryConnectTimeout)
-		}
-
-		if (!this._connected) return Promise.resolve()
-
-		return new Promise(async (resolve, reject) => {
-			try {
-				await this.sendCommand(new QuitCommand())
-				this.socket.end()
-				return resolve()
-			} catch (e) {
-				return reject(e)
+	async disconnect(): Promise<void> {
+		try {
+			this._connectionActive = false
+			if (this._retryConnectTimeout) {
+				clearTimeout(this._retryConnectTimeout)
+				this._retryConnectTimeout = null
 			}
-		})
+
+			if (this._connected) {
+				await this.sendCommand(new QuitCommand())
+			}
+		} finally {
+			this.socket.destroy()
+		}
 	}
 
-	sendCommand (command: AbstractCommand): Promise<any> {
-		if (!this._connected) return Promise.reject()
+	async sendCommand<TResponse>(command: AbstractCommand<TResponse>): Promise<TResponse> {
+		if (!this._connected) throw new Error('Hyperdeck not connected')
 
 		const res = this._queueCommand(command)
 		this._logDebug('queued:', this._commandQueue.length)
@@ -134,18 +138,18 @@ export class Hyperdeck extends EventEmitter {
 		return res
 	}
 
-	get connected () {
+	get connected(): boolean {
 		return this._connected
 	}
 
-	private _triggerRetryConnection () {
+	private _triggerRetryConnection() {
 		if (!this._retryConnectTimeout) {
 			this._retryConnectTimeout = setTimeout(() => {
 				this._retryConnection()
 			}, this.RECONNECT_INTERVAL)
 		}
 	}
-	private _retryConnection () {
+	private _retryConnection() {
 		if (this._retryConnectTimeout) {
 			clearTimeout(this._retryConnectTimeout)
 			this._retryConnectTimeout = null
@@ -162,46 +166,58 @@ export class Hyperdeck extends EventEmitter {
 		}
 	}
 
-	private _connectInner () {
+	private _connectInner(): void {
 		this._commandQueue = []
-		this._queueCommand(new DummyConnectCommand()).then(c => {
-			// TODO - we can filter supported versions here. for now we shall not as it is likely that there will not be any issues
-			// if (c.protocolVersion !== 1.6) {
-			// 	throw new Error('unknown protocol version: ' + c.protocolVersion)
-			// }
+		this._queueCommand(new DummyConnectCommand())
+			.then(async (c) => {
+				// TODO - we can filter supported versions here. for now we shall not as it is likely that there will not be any issues
+				// if (c.protocolVersion !== 1.6) {
+				// 	throw new Error('unknown protocol version: ' + c.protocolVersion)
+				// }
 
-			if (this._pingPeriod > 0) {
-				const cmd = new WatchdogPeriodCommand(1 + Math.round(this._pingPeriod / 1000))
+				if (this._pingPeriod > 0) {
+					const cmd = new WatchdogPeriodCommand(1 + Math.round(this._pingPeriod / 1000))
 
-				// force the command to send
-				this._commandQueue = []
-				const prom = this._queueCommand(cmd)
-				this._sendQueuedCommand()
-				return prom.then(() => {
-					this._logDebug('ping: setting up')
-					this._pingInterval = setInterval(() => {
-						if (this.connected) this._performPing().catch(e => this.emit('error', e))
-					}, this._pingPeriod)
-				}).then(() => c)
-			}
+					// force the command to send
+					this._commandQueue = []
+					const prom = this._queueCommand(cmd)
+					this._sendQueuedCommand()
+					return prom
+						.then(() => {
+							this._logDebug('ping: setting up')
+							this._pingInterval = setInterval(() => {
+								if (this.connected)
+									this._performPing().catch((e) => {
+										if (this._connectionActive) {
+											this.emit('error', 'ping failure', e)
+										}
+									})
+							}, this._pingPeriod)
+						})
+						.then(() => c)
+				}
 
-			return c
-		}).then((c) => {
-			this._connected = true
-			this.emit('connected', c)
-		}).catch(e => {
-			this._connected = false
-			this.socket.end()
-			this.emit('error', 'connection failed', e)
-			this._log('connection failed', e)
+				return c
+			})
+			.then((info) => {
+				this._connected = true
+				this.emit('connected', info)
+			})
+			.catch((e) => {
+				this._connected = false
+				this.socket.destroy()
+				if (this._connectionActive) {
+					this.emit('error', 'connection failed', e)
+				}
+				this._log('connection failed', e)
 
-			this._triggerRetryConnection()
-		})
+				this._triggerRetryConnection()
+			})
 
 		this.socket.connect(this._port, this._host)
 	}
 
-	private async _performPing () {
+	private async _performPing() {
 		const timeout = this._pingPeriod + 1500
 		if (Date.now() - this._lastCommandTime > timeout) {
 			this._log('ping: timed out')
@@ -217,7 +233,7 @@ export class Hyperdeck extends EventEmitter {
 		}
 	}
 
-	private _sendQueuedCommand () {
+	private _sendQueuedCommand() {
 		this._logDebug('try send:', this._commandQueue.length)
 
 		if (this._commandQueue.length === 0) return
@@ -231,13 +247,13 @@ export class Hyperdeck extends EventEmitter {
 		}
 	}
 
-	private _queueCommand (command: AbstractCommand): Promise<any> {
+	private async _queueCommand<TResponse>(command: AbstractCommand<TResponse>): Promise<TResponse> {
 		const cmdWrapper = new QueuedCommand(command)
 		this._commandQueue.push(cmdWrapper)
 		return cmdWrapper.promise
 	}
 
-	private _sendCommand (command: QueuedCommand): boolean {
+	private _sendCommand(command: QueuedCommand<any>): boolean {
 		const msg = command.command.serialize()
 		if (msg === null) return false
 
@@ -249,11 +265,10 @@ export class Hyperdeck extends EventEmitter {
 			this._lastCommandTime = Date.now()
 
 			return true
-
 		} catch (e) {
 			this._log('socket write failed', e)
 			try {
-				this.socket.end()
+				this.socket.destroy()
 			} catch (e2) {
 				// ignore
 			}
@@ -261,9 +276,9 @@ export class Hyperdeck extends EventEmitter {
 		}
 	}
 
-	private _handleData (data: string) {
+	private _handleData(data: string) {
 		const msgs = this._parser.receivedString(data)
-		msgs.forEach(resMsg => {
+		msgs.forEach((resMsg) => {
 			const codeType = GetResponseCodeType(resMsg.code)
 			if (codeType === ResponseCodeType.UNKNOWN) {
 				this._log('unknown response:', resMsg)
@@ -278,7 +293,10 @@ export class Hyperdeck extends EventEmitter {
 				// leave it to fall through in case the queued command is waiting for an async response
 			}
 
-			if (this._commandQueue.length > 0 && (!codeIsAsync || this._commandQueue[0].command.expectedResponseCode === resMsg.code)) {
+			if (
+				this._commandQueue.length > 0 &&
+				(!codeIsAsync || this._commandQueue[0].command.expectedResponseCode === resMsg.code)
+			) {
 				const cmd = this._commandQueue[0]
 				this._commandQueue.shift()
 
@@ -293,7 +311,7 @@ export class Hyperdeck extends EventEmitter {
 		})
 	}
 
-	private _handleAsyncResponse (msg: ResponseMessage) {
+	private _handleAsyncResponse(msg: ResponseMessage) {
 		switch (msg.code) {
 			case AsynchronousCode.ConnectionInfo:
 				// Only received at startup, and handled by a command
@@ -302,13 +320,13 @@ export class Hyperdeck extends EventEmitter {
 
 		const h = this._asyncHandlers[msg.code]
 		if (h) {
-			this.emit(h.eventName, h.deserialize(msg))
+			this.emit(h.eventName, h.deserialize(msg) as any)
 		} else {
 			this._log('unknown async response:', msg)
 		}
 	}
 
-	private _logDebug (...args: any[]) {
+	private _logDebug(...args: any[]) {
 		if (this.DEBUG) this._log(...args)
 	}
 }
