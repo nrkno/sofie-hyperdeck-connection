@@ -18,7 +18,7 @@ export class TransportInfoChange implements IHandler<'notify.transport'> {
 			singleClip: parseBool(msg.params['single clip']),
 			displayTimecode: msg.params['display timecode'],
 			timecode: msg.params['timecode'],
-			videoFormat: (parseStringOrNone(msg.params['video format']) ?? null) as VideoFormat | null,
+			videoFormat: parseStringOrNone(msg.params['video format']) as VideoFormat,
 			loop: parseBool(msg.params['loop']),
 			inputVideoFormat: parseStringOrNone(msg.params['input video format']) as VideoFormat | null | undefined,
 		}
