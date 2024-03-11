@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [Convential Commits](https://www.conventionalcommits.org/en/v1.0.0/#specification) for commit guidelines.
 
+## [2.0.1](https://github.com/nrkno/sofie-hyperdeck-connection/compare/v2.0.0...v2.0.1) (Mon Mar 11 2024)
+
+### Fixes
+
+- don't return videoFormat: null for async transport updates (#32) [de59cab](https://github.com/nrkno/sofie-hyperdeck-connection/commit/de59cabc523590e145cb9936b36653e774f3208b)
+
 ## [2.0.0](https://github.com/nrkno/sofie-hyperdeck-connection/compare/v1.0.0...v2.0.0) (Mon Jan 29 2024)
 
 ## Breaking changes
